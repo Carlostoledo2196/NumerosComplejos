@@ -17,7 +17,7 @@ export interface AlgebraExercise {
   z1: Complex;
   z2: Complex;
   result: Complex;
-  /** pasos en KaTeX */
+  /** pasos en HTML con fórmulas KaTeX entre $…$ */
   steps: string[];
 }
 
@@ -34,9 +34,8 @@ export function algebraExercise(rng: Rng, op: AlgebraOp): AlgebraExercise {
     return {
       op, z1, z2, result,
       steps: [
-        `\\text{Agrupa reales con reales e imaginarios con imaginarios:}`,
-        `(${sgn(a)} ${s} ${sgn(cc)}) + (${sgn(b)} ${s} ${sgn(d)})i`,
-        `= ${format(result)}`,
+        'Agrupa reales con reales e imaginarios con imaginarios.',
+        `$(${sgn(a)} ${s} ${sgn(cc)}) + (${sgn(b)} ${s} ${sgn(d)})\\,i = ${format(result)}$`,
       ],
     };
   }
@@ -44,11 +43,11 @@ export function algebraExercise(rng: Rng, op: AlgebraOp): AlgebraExercise {
   return {
     op, z1, z2, result,
     steps: [
-      `\\text{Propiedad distributiva:}\\; (${format(z1)})(${format(z2)}) = ac + adi + bci + bd\\,i^2`,
-      `= ${sgn(a)}\\cdot${sgn(cc)} + ${sgn(a)}\\cdot${sgn(d)}i + ${sgn(b)}\\cdot${sgn(cc)}i + ${sgn(b)}\\cdot${sgn(d)}\\,i^2`,
-      `\\text{Como } i^2=-1:\\; \\color{red}{bd\\,i^2 = -(${b * d})}`,
-      `\\text{Parte real: } ac - bd = ${a * cc} - (${b * d}) = ${result.re}`,
-      `\\text{Parte imaginaria: } ad + bc = ${a * d} + (${b * cc}) = ${result.im}`,
+      `Propiedad distributiva: $(${format(z1)})(${format(z2)}) = ac + adi + bci + bd\\,i^2$`,
+      `$= ${sgn(a)}\\cdot${sgn(cc)} + ${sgn(a)}\\cdot${sgn(d)}\\,i + ${sgn(b)}\\cdot${sgn(cc)}\\,i + ${sgn(b)}\\cdot${sgn(d)}\\,i^2$`,
+      `Como $i^2 = -1$: <span class="hl">$bd\\,i^2 = -(${b * d})$</span>`,
+      `Parte real: $ac - bd = ${a * cc} - (${b * d}) = ${result.re}$`,
+      `Parte imaginaria: $ad + bc = ${a * d} + (${b * cc}) = ${result.im}$`,
     ],
   };
 }
@@ -124,10 +123,10 @@ export function divisionExercise(rng: Rng): DivisionExercise {
   return {
     numerator, denominator, conjugate, realDenominator, expandedNumerator, result,
     steps: [
-      `\\text{1. Identifica el conjugado del denominador: } \\overline{${D}} = ${Cj}`,
-      `\\text{2. Multiplica numerador y denominador por el conjugado: } \\dfrac{(${N})(${Cj})}{(${D})(${Cj})}`,
-      `\\text{3. El denominador queda real: } c^2 + d^2 = ${denominator.re ** 2} + ${denominator.im ** 2} = ${realDenominator}`,
-      `\\text{4. Expande el numerador y separa: } \\dfrac{${format(expandedNumerator)}}{${realDenominator}} = ${format(result, 3)}`,
+      `Identifica el conjugado del denominador: $\\overline{${D}} = ${Cj}$`,
+      `Multiplica numerador y denominador por el conjugado: $\\dfrac{(${N})(${Cj})}{(${D})(${Cj})}$`,
+      `El denominador queda real: $c^2 + d^2 = ${denominator.re ** 2} + ${denominator.im ** 2} = ${realDenominator}$`,
+      `Expande el numerador (con $i^2 = -1$) y separa: $\\dfrac{${format(expandedNumerator)}}{${realDenominator}} = ${format(result, 3)}$`,
     ],
   };
 }
@@ -171,7 +170,7 @@ export function checkDivision(ex: DivisionExercise, ans: DivisionAnswer): Divisi
 
 /** Los cuatro pasos de la división en orden correcto, para la actividad de ordenar. */
 export function divisionStepOrder(ex: DivisionExercise): { id: number; text: string }[] {
-  return ex.steps.map((text, id) => ({ id, text: text.replace(/^\\text\{\d\. /, '\\text{') }));
+  return ex.steps.map((text, id) => ({ id, text }));
 }
 
 export const isCorrectOrder = (ids: readonly number[]): boolean => ids.every((v, k) => v === k);
