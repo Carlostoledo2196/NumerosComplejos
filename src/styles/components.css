@@ -215,3 +215,18 @@ input[type="range"] { width: 100%; accent-color: var(--primary); min-height: 2re
 .meter__track { height: 10px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
 .meter__fill { display: block; height: 100%; background: var(--primary); border-radius: 4px; }
 .meter__value { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Créditos en el banner superior */
+.app-header__credits {
+  max-width: 1120px; margin: var(--space-3) auto 0; padding-top: var(--space-3);
+  border-top: 1px solid rgb(255 255 255 / 0.25);
+  display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-5);
+  font-size: 0.85rem;
+}
+.app-header__credits div { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.app-header__credits dt { font-weight: 700; }
+.app-header__credits dd { margin: 0; opacity: 0.92; }
+:root[data-theme='dark'] .app-header__credits { border-top-color: var(--border); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .app-header__credits { border-top-color: var(--border); }
+}

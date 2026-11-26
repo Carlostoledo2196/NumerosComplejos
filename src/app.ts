@@ -3,7 +3,7 @@ import { h, button } from './ui/dom';
 import { renderMath } from './ui/math';
 import { prose, toggle } from './ui/widgets';
 import { store, moduleDone } from './state/store';
-import { COURSE } from './content/texts';
+import { COURSE, CREDITS } from './content/texts';
 import { MODULES } from './scenes';
 import type { ModuleDef } from './scenes/types';
 
@@ -43,6 +43,11 @@ function header(): HTMLElement {
         h('p', { class: 'app-header__subtitle' }, `${COURSE.subject} · ${COURSE.audience}`),
       ),
       h('div', { class: 'app-header__tools', role: 'toolbar', 'aria-label': 'Preferencias de accesibilidad' }, large, sound, dark, reset),
+    ),
+    h('dl', { class: 'app-header__credits' },
+      h('div', {}, h('dt', {}, 'Elaborado por:'), h('dd', {}, CREDITS.authors.join(' · '))),
+      h('div', {}, h('dt', {}, 'Materia:'), h('dd', {}, CREDITS.course)),
+      h('div', {}, h('dd', {}, `${CREDITS.program} · ${CREDITS.institution}`)),
     ),
   );
 }
