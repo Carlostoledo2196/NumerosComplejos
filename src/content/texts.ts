@@ -13,6 +13,14 @@ export const COURSE = {
     'Entre 2024 y 2026, en promedio el 80 % de los estudiantes no aprobó el primer corte. Delegar a ciegas los cálculos en $\\mathbb{C}$ a una calculadora limita la modelación en ingeniería. Aquí entrenarás los algoritmos paso a paso, sin calculadora.',
 };
 
+/** Créditos del banner superior. */
+export const CREDITS = {
+  authors: ['Juan Carlos Cuero Yepes', 'María José López Serrano'],
+  course: 'Taller de innovación en objetos virtuales de aprendizaje',
+  program: 'Semestre 2, Maestría en Pedagogía de la Era Digital',
+  institution: 'Universidad Libre',
+};
+
 export const SCENE1 = {
   question: '¿Por qué un Ingeniero de Sistemas moderno debe dominar los números complejos? Descubre cómo el cálculo complejo impulsa la Segunda Revolución Cuántica.',
   body:

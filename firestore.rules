@@ -1,0 +1,64 @@
+rules_version = '2';
+
+// Reglas de seguridad de la OVA. Publicar con: npx firebase deploy --only firestore:rules
+// (o copiarlas en Consola de Firebase → Firestore → Reglas).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // Docente = correo verificado que existe como documento en /docentes/{correo en minúsculas}.
+    function isTeacher() {
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && exists(/databases/$(database)/documents/docentes/$(request.auth.token.email.lower()));
+    }
+
+    function validProfile(p) {
+      return p.keys().hasOnly(['nombre', 'codigo', 'grupo', 'email'])
+        && p.nombre is string && p.nombre.size() >= 5 && p.nombre.size() <= 120
+        && p.codigo is string && p.codigo.matches('^[A-Za-z0-9-]{3,30}$')
+        && p.grupo is string && p.grupo.size() >= 1 && p.grupo.size() <= 40
+        && p.email == request.auth.token.email.lower();
+    }
+
+    // Las marcas de tiempo, si cambian, deben ser la hora del servidor (no se pueden falsificar).
+    function stampOk(field) {
+      return !(field in request.resource.data.diff(resource.data).affectedKeys())
+        || request.resource.data[field] == request.time;
+    }
+
+    // Lista de docentes autorizados: se administra solo desde la consola de Firebase.
+    match /docentes/{email} {
+      allow read: if signedIn() && request.auth.token.email.lower() == email;
+      allow write: if false;
+    }
+
+    match /estudiantes/{uid} {
+      // El estudiante lee su documento; los docentes autorizados leen todos.
+      allow read: if (signedIn() && request.auth.uid == uid) || isTeacher();
+
+      // Registro: solo el propio estudiante, con perfil válido y consentimiento de datos aceptado.
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['perfil', 'consentimiento', 'creado', 'ultimoAcceso', 'actualizado', 'estado', 'resumen'])
+        && validProfile(request.resource.data.perfil)
+        && request.resource.data.consentimiento.aceptado == true
+        && request.resource.data.consentimiento.version is string
+        && request.resource.data.consentimiento.fecha == request.time
+        && request.resource.data.creado == request.time;
+
+      // Progreso: solo el propio estudiante; perfil, consentimiento y fecha de creación no cambian.
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['estado', 'resumen', 'actualizado', 'ultimoAcceso'])
+        && stampOk('actualizado') && stampOk('ultimoAcceso');
+
+      allow delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

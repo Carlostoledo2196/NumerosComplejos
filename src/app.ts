@@ -4,17 +4,21 @@ import { renderMath } from './ui/math';
 import { prose, toggle } from './ui/widgets';
 import { store, moduleDone } from './state/store';
 import { COURSE } from './content/texts';
+import { brandHeader, applyPrefs } from './ui/brand';
 import { MODULES } from './scenes';
 import type { ModuleDef } from './scenes/types';
 
-function applyPrefs(): void {
-  const { largeText, theme } = store.get().prefs;
-  document.documentElement.classList.toggle('dua-large', largeText);
-  if (theme === 'auto') document.documentElement.removeAttribute('data-theme');
-  else document.documentElement.setAttribute('data-theme', theme);
+
+/** Datos de la cuenta cuando la OVA está conectada a Firebase. */
+export interface AccountInfo {
+  nombre: string;
+  detalle: string;
+  /** indicador del guardado en la nube */
+  syncEl: HTMLElement;
+  onLogout: () => void;
 }
 
-function header(): HTMLElement {
+function header(account?: AccountInfo): HTMLElement {
   const p = store.get().prefs;
   const large = toggle('Texto ampliado', p.largeText, (v) => store.update((s) => { s.prefs.largeText = v; }), 'btn btn--small');
   const sound = toggle('Sonido guía', p.sound, (v) => store.update((s) => { s.prefs.sound = v; }), 'btn btn--small');
@@ -36,15 +40,16 @@ function header(): HTMLElement {
     location.reload();
   }, 'btn btn--small');
 
-  return h('header', { class: 'app-header' },
-    h('div', { class: 'app-header__inner' },
-      h('div', {},
-        h('p', { class: 'app-header__title' }, 'OVA · Números Complejos y Computación Cuántica'),
-        h('p', { class: 'app-header__subtitle' }, `${COURSE.subject} · ${COURSE.audience}`),
-      ),
-      h('div', { class: 'app-header__tools', role: 'toolbar', 'aria-label': 'Preferencias de accesibilidad' }, large, sound, dark, reset),
-    ),
-  );
+  // Con cuenta en la nube no se ofrece «Reiniciar progreso»: borraría los resultados que ve el docente.
+  const tools: Node[] = account ? [large, sound, dark] : [large, sound, dark, reset];
+  const accountBar = account
+    ? h('div', { class: 'app-header__account' },
+        h('span', {}, h('strong', {}, account.nombre), ` · ${account.detalle}`),
+        account.syncEl,
+        button('Cerrar sesión', account.onLogout, 'btn btn--small'),
+      )
+    : null;
+  return brandHeader('OVA · Números Complejos y Computación Cuántica', `${COURSE.subject} · ${COURSE.audience}`, tools, accountBar);
 }
 
 function hero(): HTMLElement {
@@ -63,7 +68,7 @@ function hero(): HTMLElement {
   );
 }
 
-function route(): HTMLElement {
+function route(cloud = false): HTMLElement {
   const fill = h('div', { class: 'route__fill' });
   const label = h('p', { class: 'muted', 'aria-live': 'polite' });
   const bar = h('div', { class: 'route__bar', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': MODULES.length, 'aria-label': 'Módulos completados' }, fill);
@@ -84,7 +89,7 @@ function route(): HTMLElement {
     }
     fill.style.width = `${(done / MODULES.length) * 100}%`;
     bar.setAttribute('aria-valuenow', String(done));
-    label.textContent = `Progreso: ${done} de ${MODULES.length} módulos completados. Se guarda automáticamente en este navegador.`;
+    label.textContent = `Progreso: ${done} de ${MODULES.length} módulos completados. ${cloud ? 'Se guarda automáticamente en tu cuenta.' : 'Se guarda automáticamente en este navegador.'}`;
   };
   store.subscribe(paint);
   paint();
@@ -106,13 +111,13 @@ function moduleSection(m: ModuleDef): HTMLElement {
   return sec;
 }
 
-export function mountApp(root: HTMLElement): void {
+export function mountApp(root: HTMLElement, account?: AccountInfo): void {
   applyPrefs();
   store.subscribe(applyPrefs);
-  const main = h('main', { class: 'page', id: 'contenido' }, hero(), route(), ...MODULES.map(moduleSection));
+  const main = h('main', { class: 'page', id: 'contenido' }, hero(), route(!!account), ...MODULES.map(moduleSection));
   root.replaceChildren(
     h('a', { class: 'skip-link', href: '#contenido' }, 'Saltar al contenido'),
-    header(),
+    header(account),
     main,
     h('footer', { class: 'app-footer' },
       h('p', {}, `Objeto Virtual de Aprendizaje · ${COURSE.subject} · Enfoque DUA y constructivismo mediado por tecnología.`),

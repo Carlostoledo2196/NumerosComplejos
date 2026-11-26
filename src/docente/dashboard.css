@@ -1,0 +1,22 @@
+/* Panel docente */
+.dash { display: grid; gap: var(--space-5); grid-template-columns: minmax(0, 1fr); }
+.dash-head h1 { margin-bottom: var(--space-1); }
+.dash-filters { display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); align-items: end; }
+.dash .stats { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.stat__sub { display: block; font-size: 0.78rem; color: var(--text-muted); }
+.dash-grid { display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .dash-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.dash .meter { grid-template-columns: 8.5rem minmax(0, 1fr) 3.5rem; }
+
+.dash-table { min-width: 860px; }
+.dash-table th, .dash-table td { vertical-align: middle; }
+.dash-table tbody tr:hover { background: var(--primary-tint); }
+.dash-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.th-sort { font: inherit; font-weight: 700; background: none; border: 0; padding: 0; color: inherit; cursor: pointer; text-align: left; }
+.th-sort:hover { color: var(--primary); }
+
+.dash-dialog { width: min(920px, calc(100vw - 2rem)); max-height: calc(100vh - 2rem); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--space-5); background: var(--bg); color: var(--text); }
+.dash-dialog::backdrop { background: rgb(7 20 38 / 0.55); }
+.dash-dialog__head { display: flex; justify-content: space-between; gap: var(--space-3); align-items: center; margin-bottom: var(--space-3); }
+.dash-dialog__head h2 { margin: 0; }
+.dash-detail { display: grid; gap: var(--space-3); }
