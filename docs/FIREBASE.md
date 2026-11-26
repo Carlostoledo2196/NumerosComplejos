@@ -19,7 +19,15 @@ Recomendado: **Authentication → Plantillas** → idioma **español** para los 
 
 **Firestore → Reglas** → reemplaza todo por el contenido de [`firestore.rules`](../firestore.rules) → **Publicar**.
 
-(Alternativa por terminal: `npx firebase deploy --only firestore:rules --project ID_DE_TU_PROYECTO`.)
+Alternativa por terminal, desde la carpeta del repositorio (el proyecto `numeroscomplejos` ya está en `.firebaserc`):
+
+```bash
+npx firebase-tools login
+```
+
+```bash
+npx firebase-tools deploy --only firestore:rules
+```
 
 Las reglas garantizan que:
 - cada estudiante solo lee y escribe **su propio** documento, y no puede cambiar su perfil ni su consentimiento;
