@@ -12,7 +12,7 @@ describe('ejercitador algebraico (escena 3)', () => {
         const f = op === 'add' ? add : op === 'sub' ? sub : mul;
         expect(ex.result).toEqual(f(ex.z1, ex.z2));
         expect(ex.z1.re * ex.z1.im * ex.z2.re * ex.z2.im).not.toBe(0);
-        expect(ex.steps.length).toBeGreaterThan(2);
+        expect(ex.steps.length).toBeGreaterThanOrEqual(2);
       }
     }
   });

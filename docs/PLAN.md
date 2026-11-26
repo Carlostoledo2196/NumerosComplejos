@@ -16,6 +16,8 @@ Tomadas por defecto según la recomendación del análisis. Cualquiera se puede 
 | D4 | Video de la escena 1 | Animación programada (bit vs. cúbit + esfera de Bloch) con locución, transcripción y subtítulos | Video producido por la institución (se puede insertar después sin cambiar código) |
 | D5 | Inconsistencias del guion | Se corrigen en la OVA y se documentan en `docs/correcciones-guion.md` para actualizar el .docx | Entregar el .docx revisado |
 | D6 | Tecnología | Vite + TypeScript, sin framework de UI; KaTeX empaquetado localmente (funciona sin conexión); Vitest para pruebas | React/Vue |
+| D8 | Informe de desempeño por RAP | Lista de medidores (nombre, barra y % por RAP) en lugar del «informe radial» del guion: compara mejor los cinco porcentajes y se lee con lector de pantalla | Gráfico radial, si el equipo lo prefiere |
+| D9 | Paleta y tipografía | La del guion (§8): azul marino, cian, blanco y gris claro, con Inter. Tema claro y oscuro, contraste AA | Paleta oscura del prototipo |
 | D7 | Encuesta final | Formulario dentro de la OVA, que se guarda en SCORM (`cmi.comments` / suspend_data), con enlace opcional a Google Forms | Solo Google Forms |
 
 ## 2. Arquitectura
@@ -49,16 +51,16 @@ Principio rector: **ningún cálculo que corrija al estudiante vive en la interf
 | 0 | Plan, decisiones y correcciones del guion | ✅ |
 | 1 | Esqueleto del proyecto (Vite + TS + Vitest) | ✅ |
 | 2 | Núcleo matemático con pruebas: complejos, matrices, cúbits, circuitos, ejercicios, evaluación | ✅ |
-| 3 | Migrar las escenas 1–10 del prototipo a módulos que usan `core` | ⏳ siguiente |
-| 4 | Lo que falta: reto de circuitos, ponderación 40/60, confianza antes/después, guardado local y SCORM | |
+| 3 | Escenas 1–10 reescritas en TypeScript sobre `core`, más lo que faltaba del guion: reto de circuitos, ponderación 40/60, confianza antes/después, banco de reactivos y guardado local | ✅ |
+| 4 | Adaptador SCORM 1.2 (nota, estado y progreso en Moodle) y prueba de punta a punta automatizada en el repositorio | ⏳ siguiente |
 | 5 | Empaquetado SCORM .zip, auditoría WCAG 2.1 AA (teclado, contraste, lector de pantalla) y prueba en Moodle | |
 | 6 | Piloto con un grupo y ajustes según la encuesta | |
 
 ## 4. Modelo de evaluación (concreta lo que el guion deja abierto)
 
 - **Diagnóstica (0 %)**: escena 1 (3 preguntas) y confianza inicial de 1 a 5. Solo informa.
-- **Formativa (40 %)**: aciertos sobre intentos en los laboratorios de los RAP 2, 3 y 4 (escenas 3–7). Cuenta el **mejor** desempeño de cada laboratorio, para no castigar el reintento (DUA: retroalimentación no punitiva).
-- **Sumativa (60 %)**: reto integrador (escena 10) más el reto de circuitos, con los criterios de la rúbrica:
+- **Formativa (40 %)**: los laboratorios de los RAP 2, 3 y 4 (escenas 3–7) se hacen por rondas: e3 de 4 ejercicios, e4 de 5 preguntas, e5 de 2 divisiones, y e6 y e7 de 3 operaciones. Cuenta el acierto **al primer intento**; el estudiante puede reintentar hasta acertar, y «Mostrar solución» cuenta como no acertado. De cada laboratorio vale la **mejor** ronda (DUA: retroalimentación no punitiva).
+- **Sumativa (60 %)**: cuestionario integrador (escena 10) más el reto de circuitos. El cuestionario toma un reactivo por RAP de un banco de 2 por RAP y baraja las opciones; tras calificar, las respuestas se bloquean y para cambiarlas hay que pedir un intento nuevo, con otras preguntas. El reto de circuitos vale min(1, resueltos / 3). Los criterios de la rúbrica son:
   - C1 Evocación y operaciones en ℂ (30 %) ← RAP 1 y RAP 2
   - C2 Matrices complejas y determinantes (30 %) ← RAP 3 y RAP 4
   - C3 Aplicación en computación cuántica (40 %) ← RAP 5 + reto de circuitos

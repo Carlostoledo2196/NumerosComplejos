@@ -25,3 +25,15 @@ npm run build     # sitio estático en dist/
 | `circuits.ts` | Reto de circuitos por bloques con evaluador y solución óptima | Cierre · RAP 5 |
 | `exercises.ts` | Generadores con pasos y diagnóstico del error típico | E3–E5 |
 | `assessment.ts` | Formativa 40 % / sumativa 60 %, rúbrica 1.0–5.0, insignia, puntaje SCORM | E10 |
+
+## Interfaz (`src/`)
+
+| Carpeta | Contenido |
+|---|---|
+| `scenes/` | Las 10 escenas del guion (`scene01.ts` … `scene10.ts`) y el registro de módulos (`index.ts`) |
+| `content/` | Textos, diagnóstico, retos de Argand, pares polares y banco del reto final: **editables por docentes** sin tocar la lógica. `tests/content.test.ts` verifica cada clave con el núcleo |
+| `state/` | Estado persistente (localStorage, tolerante a modo privado) e informe final |
+| `ui/` | Componentes: retroalimentación, rondas de laboratorio, laboratorio de matrices, esfera de Bloch, KaTeX local, audio |
+| `styles/` | Tokens de diseño (tema claro/oscuro, contraste AA) y componentes |
+
+Accesibilidad (DUA / WCAG 2.1 AA): todo se puede usar con teclado (plano de Argand y esfera con flechas), texto ampliado, tema oscuro, locución con transcripción, modo sin límite de tiempo, retroalimentación anunciada a lectores de pantalla y respeto de `prefers-reduced-motion`.
