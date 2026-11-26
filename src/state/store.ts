@@ -131,6 +131,18 @@ export class Store {
       Object.assign(s, defaultState(), { prefs });
     });
   }
+
+  /**
+   * Reemplaza todo el estado (p. ej. el progreso que viene de la nube al iniciar sesión).
+   * Conserva las preferencias de accesibilidad de este dispositivo.
+   */
+  replace(raw: unknown): void {
+    const prefs = this.state.prefs;
+    const next = hydrate(raw);
+    this.update((s) => {
+      Object.assign(s, next, { prefs });
+    });
+  }
 }
 
 function safeLocalStorage(): StorageLike | null {

@@ -4,6 +4,7 @@ Objeto Virtual de Aprendizaje para *Matemáticas Avanzadas para Ingenieros* (Ing
 
 - Plan, decisiones y fases: [`docs/PLAN.md`](docs/PLAN.md)
 - Correcciones propuestas al guion: [`docs/correcciones-guion.md`](docs/correcciones-guion.md)
+- Conexión con Firebase (registro de estudiantes y panel docente): [`docs/FIREBASE.md`](docs/FIREBASE.md)
 - Prototipo original (referencia): [`legacy/prototipo-ova.html`](legacy/prototipo-ova.html)
 
 ## Uso
@@ -12,7 +13,8 @@ Objeto Virtual de Aprendizaje para *Matemáticas Avanzadas para Ingenieros* (Ing
 npm install
 npm test          # pruebas del núcleo matemático
 npm run dev       # servidor local
-npm run build     # sitio estático en dist/
+npm run build     # sitio estático en dist/ (OVA + panel docente)
+npm run test:rules  # reglas de seguridad de Firestore contra el emulador
 ```
 
 ## Núcleo (`src/core`)
