@@ -1,0 +1,3914 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="narrative">
+  <meta name="design-style" content="aurora">
+  <title>OVA: Evocación de Números Complejos y Computación Cuántica</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/katex.min.css">
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/contrib/auto-render.min.js"></script>
+  <script defer src="https://unpkg.com/lucide@1.43.0/dist/umd/lucide.min.js"></script>
+
+  <style>
+    :root {
+      color-scheme: dark;
+
+      /* Aurora palette */
+      --background: #0c1214;
+      --surface-container-low: #111a1e;
+      --surface-container: #152024;
+      --surface-container-high: #1c2a30;
+
+      --on-surface: #edf3f5;
+      --on-surface-variant: #94a8b0;
+
+      --outline: #38515c;
+      --outline-variant: #213138;
+
+      --primary: #63c7d6;
+      --on-primary: #081214;
+      --primary-container: #163840;
+      --on-primary-container: #c7f0f7;
+      --secondary: #5d7882;
+      --tertiary: #87d69b;
+      --error: #f27474;
+      --on-error: #1a0606;
+
+      --data-1: #63c7d6;
+      --data-2: #87d69b;
+      --data-3: #e8b954;
+      --data-4: #f08c70;
+      --data-context: #415861;
+
+      --font-headline: 'Instrument Sans', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-label: 'Geist Mono', monospace;
+
+      --rounded: 0.5rem;
+      --rounded-lg: 0.75rem;
+      --rounded-full: 9999px;
+
+      --hairline: 1px solid var(--outline-variant);
+      --hairline-strong: 1px solid var(--outline);
+      --panel-gradient: linear-gradient(180deg, #162226 0%, #111a1e 100%);
+      --heading-tracking: -0.025em;
+      --label-tracking: 0.06em;
+      --sage-tint: color-mix(in srgb, var(--tertiary) 13%, transparent);
+      --cyan-tint: color-mix(in srgb, var(--primary) 13%, transparent);
+      --amber-tint: color-mix(in srgb, var(--data-3) 14%, transparent);
+      --error-tint: color-mix(in srgb, var(--error) 13%, transparent);
+      --sage-border: color-mix(in srgb, var(--tertiary) 40%, transparent);
+      --cyan-border: color-mix(in srgb, var(--primary) 42%, transparent);
+      --amber-border: color-mix(in srgb, var(--data-3) 40%, transparent);
+      --error-border: color-mix(in srgb, var(--error) 42%, transparent);
+
+      /* Shared tokens */
+      --positive: #87d69b;
+      --warning: #e8b954;
+      --focus: #63c7d6;
+
+      /* Narrative Type Scale */
+      --display-size: clamp(2.25rem, 1.4rem + 3.4vw, 3.75rem);
+      --headline-size: clamp(1.625rem, 1.2rem + 1.8vw, 2.35rem);
+      --subhead-size: clamp(1.1875rem, 1.05rem + 0.55vw, 1.45rem);
+      --body-size: clamp(1rem, 0.96rem + 0.22vw, 1.125rem);
+      --label-size: clamp(0.75rem, 0.72rem + 0.14vw, 0.8125rem);
+
+      /* Spacing Scale */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+      --space-3xl: 6rem;
+
+      /* Motion */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+      --dur-long: 420ms;
+    }
+
+    /* High contrast DUA mode */
+    html.dua-large {
+      --body-size: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem);
+      --label-size: 0.875rem;
+    }
+
+    /* Base reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      overflow-x: clip;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+    header { position: static !important; }
+
+    .page-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-xl);
+      padding: var(--space-lg);
+      max-width: 1180px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .page-grid * { min-width: 0; }
+
+    /* Focus rings */
+    :focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    /* Typography helpers */
+    h1, h2, h3, h4 {
+      font-family: var(--font-headline);
+      letter-spacing: var(--heading-tracking);
+      color: var(--on-surface);
+      margin: 0;
+    }
+    h1 {
+      font-size: var(--display-size);
+      font-weight: 600;
+      line-height: 1.08;
+    }
+    h2 {
+      font-size: var(--headline-size);
+      font-weight: 600;
+      line-height: 1.15;
+    }
+    h3 {
+      font-size: var(--subhead-size);
+      font-weight: 600;
+      line-height: 1.25;
+    }
+    p {
+      margin: 0 0 var(--space-md) 0;
+      max-width: 68ch;
+      color: var(--on-surface);
+    }
+    p:last-child { margin-bottom: 0; }
+    .muted { color: var(--on-surface-variant); }
+
+    .data-label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+      display: inline-block;
+    }
+
+    /* Aurora Panels & Wells */
+    .panel {
+      background: var(--panel-gradient);
+      border: var(--hairline);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+    }
+    .panel-soft {
+      background: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+    }
+    .well {
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+    }
+
+    /* Hero / Header */
+    .hero-header {
+      padding-top: var(--space-lg);
+      padding-bottom: var(--space-lg);
+      border-bottom: var(--hairline);
+      display: grid;
+      gap: var(--space-lg);
+    }
+    .hero-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm) var(--space-lg);
+      align-items: center;
+      justify-content: space-between;
+    }
+    .dua-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: var(--space-xl);
+      align-items: start;
+    }
+    .lede {
+      font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+      color: var(--on-surface-variant);
+      max-width: 62ch;
+      margin-top: var(--space-md);
+    }
+
+    /* Metric Tiles */
+    .metric-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+    .metric-tile {
+      background: var(--panel-gradient);
+      border: var(--hairline);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .metric-value {
+      font-family: var(--font-headline);
+      font-weight: 600;
+      font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: var(--heading-tracking);
+      color: var(--on-surface);
+      line-height: 1.1;
+    }
+    .metric-delta {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--tertiary);
+    }
+
+    /* Index Navigation & Progress Bar */
+    .ova-nav-panel {
+      background: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md) var(--space-lg);
+      display: grid;
+      gap: var(--space-md);
+    }
+    .ova-nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+    .nav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      min-height: 44px;
+      padding: 0 var(--space-md);
+      border-radius: var(--rounded);
+      border: var(--hairline);
+      background: var(--surface-container);
+      color: var(--on-surface);
+      text-decoration: none;
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+    }
+    .nav-pill:hover {
+      background: var(--surface-container-high);
+      border-color: var(--primary);
+    }
+    .nav-pill.done {
+      border-color: var(--sage-border);
+      background: var(--sage-tint);
+      color: var(--tertiary);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded-full);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      transition: width var(--dur-short) var(--ease-out);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      min-height: 44px;
+      padding: 0 var(--space-md);
+      border-radius: var(--rounded);
+      font-family: var(--font-headline);
+      font-weight: 600;
+      font-size: 0.9375rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+      text-decoration: none;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: color-mix(in srgb, var(--primary) 85%, var(--on-surface));
+    }
+    .btn-secondary {
+      background: var(--surface-container);
+      color: var(--on-surface);
+      border: var(--hairline-strong);
+    }
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--surface-container-high);
+      border-color: var(--primary);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--cyan-border);
+    }
+    .btn-ghost:hover:not(:disabled) {
+      background: var(--cyan-tint);
+    }
+    .btn-sm {
+      min-height: 44px;
+      padding: 0 var(--space-sm);
+      font-size: var(--label-size);
+      font-family: var(--font-label);
+    }
+    .btn-active {
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      border-color: var(--primary);
+    }
+
+    /* Status chips */
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      background: var(--sage-tint);
+      color: var(--tertiary);
+      border: 1px solid var(--sage-border);
+      border-radius: var(--rounded);
+      padding: var(--space-xs) var(--space-sm);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+    }
+    .status-chip.cyan {
+      background: var(--cyan-tint);
+      color: var(--primary);
+      border-color: var(--cyan-border);
+    }
+    .status-chip.amber {
+      background: var(--amber-tint);
+      color: var(--data-3);
+      border-color: var(--amber-border);
+    }
+    .status-chip.error {
+      background: var(--error-tint);
+      color: var(--error);
+      border-color: var(--error-border);
+    }
+
+    /* Inputs & Controls */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .field-group label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+    }
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      font-family: var(--font-label);
+      font-size: 0.9375rem;
+      color: var(--on-surface);
+      background: var(--background);
+      border: var(--hairline-strong);
+      border-radius: var(--rounded);
+      min-height: 44px;
+      padding: var(--space-xs) var(--space-md);
+      width: 100%;
+    }
+    select {
+      padding-right: var(--space-xl);
+    }
+    textarea {
+      min-height: 92px;
+      padding: var(--space-sm) var(--space-md);
+      font-family: var(--font-body);
+    }
+    input[type="range"] {
+      width: 100%;
+      min-height: 44px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    .control-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      align-items: end;
+    }
+
+    /* Module & Scene structure */
+    .module-section {
+      padding-top: var(--space-xl);
+      border-top: var(--hairline-strong);
+      display: grid;
+      gap: var(--space-xl);
+    }
+    .module-header {
+      display: grid;
+      gap: var(--space-sm);
+    }
+    .module-kicker-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+    .scene-block {
+      display: grid;
+      gap: var(--space-lg);
+    }
+    .scene-title-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm) var(--space-md);
+      align-items: baseline;
+      justify-content: space-between;
+      border-bottom: var(--hairline);
+      padding-bottom: var(--space-sm);
+    }
+
+    /* Two-column layouts */
+    .split-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    .split-asym {
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+
+    /* Feedback Banner */
+    .feedback-box {
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      border: var(--hairline);
+      background: var(--surface-container-low);
+      font-size: 0.95rem;
+      display: none;
+    }
+    .feedback-box.visible { display: block; }
+    .feedback-box.ok {
+      background: var(--sage-tint);
+      border-color: var(--sage-border);
+      color: var(--on-surface);
+    }
+    .feedback-box.err {
+      background: var(--error-tint);
+      border-color: var(--error-border);
+      color: var(--on-surface);
+    }
+    .feedback-box.info {
+      background: var(--cyan-tint);
+      border-color: var(--cyan-border);
+      color: var(--on-surface);
+    }
+
+    /* Interactive Option Buttons / Quiz */
+    .option-list {
+      display: grid;
+      gap: var(--space-sm);
+    }
+    .option-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      width: 100%;
+      min-height: 48px;
+      padding: var(--space-sm) var(--space-md);
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+    }
+    .option-btn:hover {
+      background: var(--surface-container-high);
+      border-color: var(--primary);
+    }
+    .option-btn.selected {
+      background: var(--primary-container);
+      border-color: var(--primary);
+      color: var(--on-primary-container);
+    }
+    .option-btn.correct {
+      background: var(--sage-tint);
+      border-color: var(--tertiary);
+    }
+    .option-btn.wrong {
+      background: var(--error-tint);
+      border-color: var(--error);
+    }
+
+    /* Confidence Scale */
+    .confidence-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+    .conf-btn {
+      min-width: 48px;
+      min-height: 44px;
+      border-radius: var(--rounded);
+      border: var(--hairline-strong);
+      background: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-label);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .conf-btn.active {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+
+    /* Argand Plane SVG */
+    .svg-stage {
+      width: 100%;
+      min-height: 340px;
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .argand-svg {
+      width: 100%;
+      height: auto;
+      max-height: 380px;
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    /* Matching activity */
+    .match-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-md);
+    }
+    .match-col {
+      display: grid;
+      gap: var(--space-sm);
+    }
+
+    /* Highlighted error term (-bd) */
+    .highlight-term {
+      background: var(--error-tint);
+      border: 1px solid var(--error-border);
+      color: var(--error);
+      padding: 0 var(--space-xs);
+      border-radius: 4px;
+      font-family: var(--font-label);
+      font-weight: 600;
+    }
+
+    /* Division step ordering */
+    .step-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      padding: var(--space-sm) var(--space-md);
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+    }
+    .step-controls {
+      display: flex;
+      gap: var(--space-xs);
+      flex-shrink: 0;
+    }
+
+    /* Matrix Grid Editor */
+    .matrix-wrap {
+      display: inline-flex;
+      align-items: stretch;
+      gap: var(--space-xs);
+      padding: var(--space-sm) var(--space-md);
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      position: relative;
+    }
+    .matrix-bracket-l {
+      width: 6px;
+      border-left: 2px solid var(--primary);
+      border-top: 2px solid var(--primary);
+      border-bottom: 2px solid var(--primary);
+      border-radius: 2px 0 0 2px;
+    }
+    .matrix-bracket-r {
+      width: 6px;
+      border-right: 2px solid var(--primary);
+      border-top: 2px solid var(--primary);
+      border-bottom: 2px solid var(--primary);
+      border-radius: 0 2px 2px 0;
+    }
+    .matrix-cells {
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .matrix-cell-input {
+      min-width: 78px;
+      max-width: 112px;
+      min-height: 44px;
+      text-align: center;
+      padding: var(--space-xs);
+      font-family: var(--font-label);
+      font-size: 0.875rem;
+      background: var(--surface-container);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      color: var(--on-surface);
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+    }
+    .matrix-cell-input.hl-row {
+      background: var(--cyan-tint);
+      border-color: var(--primary);
+    }
+    .matrix-cell-input.hl-col {
+      background: var(--amber-tint);
+      border-color: var(--data-3);
+    }
+    .matrix-cell-input.cell-ok {
+      background: var(--sage-tint);
+      border-color: var(--tertiary);
+    }
+    .matrix-cell-input.cell-err {
+      background: var(--error-tint);
+      border-color: var(--error);
+    }
+    .matrix-cell-static {
+      min-width: 78px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-xs) var(--space-sm);
+      font-family: var(--font-label);
+      font-size: 0.875rem;
+      background: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      cursor: pointer;
+    }
+    .matrix-cell-static.active-target {
+      background: var(--primary-container);
+      border-color: var(--primary);
+      color: var(--on-primary-container);
+    }
+
+    /* Bloch Canvas */
+    .bloch-canvas-wrap {
+      width: 100%;
+      min-height: 360px;
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      position: relative;
+      overflow: hidden;
+    }
+    .bloch-canvas {
+      width: 100%;
+      height: 360px;
+      display: block;
+      cursor: grab;
+      touch-action: none;
+    }
+    .bloch-canvas:active { cursor: grabbing; }
+
+    /* Tables */
+    .table-scroll {
+      overflow-x: auto;
+      border: var(--hairline);
+      border-radius: var(--rounded);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    th {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+      background: var(--surface-container);
+      text-align: left;
+      padding: var(--space-sm) var(--space-md);
+      border-bottom: var(--hairline-strong);
+    }
+    td {
+      padding: var(--space-sm) var(--space-md);
+      border-bottom: var(--hairline);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+
+    /* Details / Progressive disclosure */
+    details {
+      background: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md);
+    }
+    summary {
+      cursor: pointer;
+      font-family: var(--font-headline);
+      font-weight: 600;
+      color: var(--primary);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+    }
+    summary::-webkit-details-marker { display: none; }
+    details[open] summary {
+      margin-bottom: var(--space-md);
+      border-bottom: var(--hairline);
+      padding-bottom: var(--space-sm);
+    }
+
+    /* Footer */
+    footer {
+      border-top: var(--hairline-strong);
+      padding: var(--space-xl) 0 var(--space-2xl);
+      display: grid;
+      gap: var(--space-md);
+      color: var(--on-surface-variant);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 860px) {
+      .hero-grid,
+      .split-2,
+      .split-asym,
+      .match-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 640px) {
+      .page-grid {
+        padding: var(--space-md);
+        gap: var(--space-lg);
+      }
+      .panel, .panel-soft {
+        padding: var(--space-md);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-grid">
+
+    <!-- ENCABEZADO E INTRODUCCIÓN PEDAGÓGICA -->
+    <header class="hero-header">
+      <div class="hero-meta-row">
+        <span class="data-label">Matemáticas Avanzadas para Ingenieros · Quinto Semestre · Ingeniería de Sistemas</span>
+        <div class="dua-toolbar">
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-dua-font" onclick="toggleDuaFont()">
+            <i data-lucide="type" aria-hidden="true"></i>
+            <span>Texto ampliado DUA</span>
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-dua-audio" onclick="toggleSound()">
+            <i data-lucide="volume-2" aria-hidden="true"></i>
+            <span id="label-sound">Sonido guía: Activo</span>
+          </button>
+          <button type="button" class="btn btn-ghost btn-sm" id="btn-reset-ova" onclick="handleResetOva(this)">
+            <i data-lucide="rotate-ccw" aria-hidden="true"></i>
+            <span>Reiniciar progreso</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-grid">
+        <div>
+          <h1>Evocación de Números Complejos y Computación Cuántica</h1>
+          <p class="lede">Objeto Virtual de Aprendizaje (OVA) interactivo de 60 minutos diseñado bajo el Modelo DUA y el aprendizaje activo para reactivar el cálculo en $\mathbb{C}$, las operaciones con matrices complejas y su aplicación directa en cúbits y compuertas cuánticas.</p>
+        </div>
+        <div class="panel">
+          <span class="data-label">Diagnóstico formativo de base</span>
+          <div class="metric-strip" style="margin-top: var(--space-sm);">
+            <div>
+              <div class="metric-value">80%</div>
+              <span class="metric-delta" style="color: var(--data-4);">Dificultad en primer corte</span>
+            </div>
+            <div>
+              <div class="metric-value">5 RAP</div>
+              <span class="metric-delta">Competencias evaluables</span>
+            </div>
+            <div>
+              <div class="metric-value">60 min</div>
+              <span class="metric-delta">5 módulos · 10 escenas</span>
+            </div>
+          </div>
+          <p class="muted" style="margin-top: var(--space-md); font-size: 0.875rem;">Los sondeos entre 2024 y 2026 en Santiago de Cali revelan que delegar ciegamente los cálculos en $\mathbb{C}$ a calculadoras limita la modelación en ingeniería. Aquí entrenarás los algoritmos paso a paso sin calculadora externa.</p>
+        </div>
+      </div>
+
+      <!-- Barra de navegación por módulos y progreso -->
+      <nav class="ova-nav-panel" aria-label="Navegación por módulos del OVA">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-sm); align-items: center;">
+          <span class="data-label">Ruta de aprendizaje (progreso guardado automáticamente)</span>
+          <span class="status-chip cyan" id="overall-progress-label">Progreso: 0 / 5 módulos completados</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="overall-progress-bar-wrap">
+          <div class="progress-fill" id="overall-progress-fill"></div>
+        </div>
+        <div class="ova-nav-links">
+          <a class="nav-pill" id="nav-m1" href="#modulo-1">M1 · Campo $\mathbb{C}$ y Argand</a>
+          <a class="nav-pill" id="nav-m2" href="#modulo-2">M2 · Álgebra y Ciclicidad</a>
+          <a class="nav-pill" id="nav-m3" href="#modulo-3">M3 · Matrices y Determinantes</a>
+          <a class="nav-pill" id="nav-m4" href="#modulo-4">M4 · Cúbits y Bloch</a>
+          <a class="nav-pill" id="nav-m5" href="#modulo-5">M5 · Reto Final DUA</a>
+        </div>
+      </nav>
+    </header>
+
+    <main style="display: grid; gap: var(--space-2xl);">
+
+      <!-- ================================================================ -->
+      <!-- MÓDULO 1: INTRODUCCIÓN Y EVOCACIÓN DEL CAMPO COMPLEJO            -->
+      <!-- ================================================================ -->
+      <section id="modulo-1" class="module-section">
+        <div class="module-header">
+          <div class="module-kicker-row">
+            <span class="data-label">Módulo 1 · 10 minutos</span>
+            <span class="status-chip cyan">RAP 1 · Definición y representación en $\mathbb{C}$</span>
+            <span class="status-chip" id="badge-m1" style="display: none;">Completado</span>
+          </div>
+          <h2>Introducción y Evocación del Campo Complejo $\mathbb{C}$</h2>
+          <p class="muted">Define correctamente el campo de los números complejos, su unidad imaginaria $i$ ($j$ en ingeniería eléctrica) y la transición entre las formas cartesiana $z = a + ib$ y polar $z = r e^{i\theta}$.</p>
+        </div>
+
+        <!-- ESCENA 1 -->
+        <article class="panel scene-block" id="escena-1">
+          <div class="scene-title-bar">
+            <h3>Escena 1 · Reto Cuántico e Importancia en Ingeniería</h3>
+            <span class="data-label">Inicio · 5 min</span>
+          </div>
+
+          <div class="split-2">
+            <div style="display: grid; gap: var(--space-md);">
+              <div class="well">
+                <span class="data-label">Pregunta guía</span>
+                <p style="margin-top: var(--space-xs); font-weight: 600;">«¿Por qué un Ingeniero de Sistemas Moderno debe dominar los números complejos? Descubre cómo el cálculo complejo impulsa la Segunda Revolución Cuántica.»</p>
+              </div>
+              <p>En la computación clásica, un bit adopta únicamente dos estados deterministas ($0$ o $1$). En un procesador cuántico, la unidad fundamental es el <strong>cúbit</strong>, cuyo estado vive en un espacio vectorial complejo bidimensional descrito por una superposición $|\psi\rangle = \alpha|0\rangle + \beta|1\rangle$, donde las amplitudes $\alpha$ y $\beta$ son <strong>números complejos</strong> cuya fase relativa determina la interferencia cuántica.</p>
+
+              <!-- Locución DUA y transcripción -->
+              <div class="panel-soft" style="display: grid; gap: var(--space-sm);">
+                <div style="display: flex; flex-wrap: wrap; gap: var(--space-sm); align-items: center; justify-content: space-between;">
+                  <span class="data-label">Recurso multimedia accesible (DUA)</span>
+                  <div style="display: flex; gap: var(--space-sm);">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="toggleSpeechScene1()" id="btn-speech-s1">
+                      <i data-lucide="play" aria-hidden="true"></i>
+                      <span>Escuchar locución</span>
+                    </button>
+                    <button type="button" class="btn btn-ghost btn-sm" onclick="toggleTranscriptScene1()" id="btn-transcript-s1">
+                      <i data-lucide="captions" aria-hidden="true"></i>
+                      <span>Subtítulos / Transcripción</span>
+                    </button>
+                  </div>
+                </div>
+                <div id="transcript-s1" class="well" style="display: none; font-size: 0.9rem;">
+                  <span class="data-label">Transcripción de locución motivadora</span>
+                  <p style="margin-top: var(--space-xs);">«Bienvenido, futuro ingeniero de sistemas. Durante siglos, los números imaginarios parecían una abstracción pura; hoy gobiernan tanto la impedancia en circuitos como la fase de los cúbits en los procesadores cuánticos de nueva generación. Al operar con $i$, con matrices unitarias complejas y con la Esfera de Bloch sin depender ciegamente de una calculadora, construyes la base matemática para diseñar algoritmos cuánticos reales.»</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Comparador Visual Clásico vs Cuántico -->
+            <div class="well" style="display: grid; gap: var(--space-md);">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+                <span class="data-label">Comparador interactivo · Bit vs. Cúbit</span>
+                <div style="display: flex; gap: var(--space-xs);">
+                  <button type="button" class="btn btn-secondary btn-sm btn-active" id="btn-mode-bit" onclick="setQuantumCompareMode('bit')">Bit clásico</button>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-mode-qubit" onclick="setQuantumCompareMode('qubit')">Cúbit en superposición</button>
+                </div>
+              </div>
+              <svg id="svg-bit-qubit" viewBox="0 0 420 210" style="width: 100%; height: auto;" role="img" aria-label="Comparación visual entre un bit clásico y un cúbit cuántico">
+                <!-- Se renderiza por JS con tokens CSS -->
+              </svg>
+              <p class="muted" id="compare-caption" style="font-size: 0.875rem;">Un bit clásico solo puede situarse en uno de los polos discretos: $0$ lógico o $1$ lógico.</p>
+            </div>
+          </div>
+
+          <!-- Desafío de Evocación: Confianza previa + Diagnóstico H5P sin nota -->
+          <div class="panel-soft" style="display: grid; gap: var(--space-md);">
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-sm);">
+              <div>
+                <span class="data-label">Interacción · Iniciar Desafío de Evocación</span>
+                <h4 style="margin-top: var(--space-xs);">Nivel de confianza inicial y diagnóstico rápido (0% ponderación)</h4>
+              </div>
+              <button type="button" class="btn btn-primary" onclick="toggleDiagnosticBox()">
+                <i data-lucide="sparkles" aria-hidden="true"></i>
+                <span>Iniciar Desafío de Evocación</span>
+              </button>
+            </div>
+
+            <div id="diagnostic-box" style="display: none; gap: var(--space-lg);">
+              <div class="well">
+                <span class="data-label">1. Selecciona tu nivel de confianza previo en números complejos (1 = muy bajo, 5 = alto)</span>
+                <div class="confidence-row" style="margin-top: var(--space-sm);" role="group" aria-label="Nivel de confianza del 1 al 5">
+                  <button type="button" class="conf-btn" onclick="setConfidence(1)" id="conf-1">1</button>
+                  <button type="button" class="conf-btn" onclick="setConfidence(2)" id="conf-2">2</button>
+                  <button type="button" class="conf-btn" onclick="setConfidence(3)" id="conf-3">3</button>
+                  <button type="button" class="conf-btn" onclick="setConfidence(4)" id="conf-4">4</button>
+                  <button type="button" class="conf-btn" onclick="setConfidence(5)" id="conf-5">5</button>
+                </div>
+                <p class="muted" id="conf-status" style="margin-top: var(--space-sm); font-size: 0.875rem;">Aún no seleccionas tu nivel de confianza inicial.</p>
+              </div>
+
+              <div class="card-grid">
+                <div class="well" style="display: grid; gap: var(--space-sm);">
+                  <span class="data-label">Diagnóstico 1</span>
+                  <p style="font-size: 0.95rem;">¿Cuál es la definición algebraica fundamental de la unidad imaginaria $i$ (o $j$ en ingeniería)?</p>
+                  <div class="option-list">
+                    <button type="button" class="option-btn" onclick="answerDiag(0, 0, this)">$i^2 = 1$</button>
+                    <button type="button" class="option-btn" onclick="answerDiag(0, 1, this)">$i^2 = -1$, es decir $i = \sqrt{-1}$</button>
+                    <button type="button" class="option-btn" onclick="answerDiag(0, 2, this)">$i = 0$ en el eje real</button>
+                  </div>
+                  <div class="feedback-box" id="diag-fb-0"></div>
+                </div>
+
+                <div class="well" style="display: grid; gap: var(--space-sm);">
+                  <span class="data-label">Diagnóstico 2</span>
+                  <p style="font-size: 0.95rem;">La ecuación cuadrática $x^2 + 1 = 0$ no tiene solución en $\mathbb{R}$. ¿Cuál es su conjunto solución en $\mathbb{C}$?</p>
+                  <div class="option-list">
+                    <button type="button" class="option-btn" onclick="answerDiag(1, 0, this)">$x = \pm 1$</button>
+                    <button type="button" class="option-btn" onclick="answerDiag(1, 1, this)">$x = \pm i$</button>
+                    <button type="button" class="option-btn" onclick="answerDiag(1, 2, this)">No tiene solución en $\mathbb{C}$</button>
+                  </div>
+                  <div class="feedback-box" id="diag-fb-1"></div>
+                </div>
+
+                <div class="well" style="display: grid; gap: var(--space-sm);">
+                  <span class="data-label">Diagnóstico 3</span>
+                  <p style="font-size: 0.95rem;">Dado el número complejo $z = -4 + 7i$, ¿cuál es su parte real $\operatorname{Re}(z)$ y su parte imaginaria $\operatorname{Im}(z)$?</p>
+                  <div class="option-list">
+                    <button type="button" class="option-btn" onclick="answerDiag(2, 0, this)">$\operatorname{Re}(z) = -4,\ \operatorname{Im}(z) = 7$</button>
+                    <button type="button" class="option-btn" onclick="answerDiag(2, 1, this)">$\operatorname{Re}(z) = 7,\ \operatorname{Im}(z) = -4$</button>
+                    <button type="button" class="option-btn" onclick="answerDiag(2, 2, this)">$\operatorname{Re}(z) = -4,\ \operatorname{Im}(z) = 7i$</button>
+                  </div>
+                  <div class="feedback-box" id="diag-fb-2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ESCENA 2 -->
+        <article class="panel scene-block" id="escena-2">
+          <div class="scene-title-bar">
+            <h3>Escena 2 · Definición del Campo $\mathbb{C}$ y Plano de Argand</h3>
+            <span class="data-label">5 min · Forma Cartesiana y Polar</span>
+          </div>
+
+          <p>El campo $\mathbb{C}$ extiende al campo $\mathbb{R}$ al definir la unidad imaginaria $i$, tal que $i = \sqrt{-1}$ ($i^2 = -1$), permitiendo solucionar ecuaciones como $x^2 + 1 = 0$. Geométricamente, todo número complejo $z = a + ib$ corresponde a un vector en el <strong>Plano de Argand</strong> (eje horizontal Real $\operatorname{Re}$ y eje vertical Imaginario $\operatorname{Im}$), o a su forma polar $z = r e^{i\theta}$ donde $r = \sqrt{a^2 + b^2}$ y $\theta = \tan^{-1}(b/a)$ ajustado al cuadrante.</p>
+
+          <div class="split-asym">
+            <!-- Plano de Argand interactivo -->
+            <div class="well" style="display: grid; gap: var(--space-md);">
+              <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-sm);">
+                <span class="data-label">Plano de Argand Interactivo</span>
+                <span class="status-chip cyan" id="argand-challenge-counter">Reto 1 de 3</span>
+              </div>
+
+              <p id="argand-prompt" style="font-weight: 600; font-size: 0.95rem;">Ubica el vector complejo $z = 3 + 2i$ haciendo clic o arrastrando el punto sobre el Plano de Argand.</p>
+
+              <div class="svg-stage">
+                <svg id="argand-svg" class="argand-svg" viewBox="0 0 360 360" role="img" aria-label="Plano de Argand interactivo con eje real horizontal y eje imaginario vertical">
+                </svg>
+              </div>
+
+              <!-- Controles accesibles por teclado / precisión -->
+              <div class="control-row">
+                <div class="field-group" style="flex: 1 1 110px;">
+                  <label for="argand-input-a">Parte Real (a)</label>
+                  <input type="number" id="argand-input-a" min="-5" max="5" step="0.5" value="1" oninput="syncArgandFromInputs()">
+                </div>
+                <div class="field-group" style="flex: 1 1 110px;">
+                  <label for="argand-input-b">Parte Imaginaria (b)</label>
+                  <input type="number" id="argand-input-b" min="-5" max="5" step="0.5" value="1" oninput="syncArgandFromInputs()">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="checkArgandChallenge()">Verificar vector</button>
+                <button type="button" class="btn btn-secondary" onclick="nextArgandChallenge()">Siguiente reto</button>
+              </div>
+
+              <div style="display: flex; flex-wrap: wrap; gap: var(--space-md); font-family: var(--font-label); font-size: 0.85rem; color: var(--on-surface-variant);">
+                <span id="argand-readout-cart">Cartesiana: $z = 1 + 1i$</span>
+                <span id="argand-readout-polar">Polar: $r = 1.41,\ \theta = 45^\circ$</span>
+              </div>
+
+              <div class="feedback-box" id="argand-feedback"></div>
+            </div>
+
+            <!-- Emparejamiento cartesiana vs polar -->
+            <div class="well" style="display: grid; gap: var(--space-md);">
+              <div>
+                <span class="data-label">Actividad de emparejamiento</span>
+                <h4 style="margin-top: var(--space-xs);">Conecta cada forma cartesiana con su equivalente polar $z = r e^{i\theta}$</h4>
+                <p class="muted" style="font-size: 0.875rem;">Selecciona primero una tarjeta cartesiana (izquierda) y luego su par polar (derecha).</p>
+              </div>
+
+              <div class="match-grid">
+                <div class="match-col" id="match-left-col"></div>
+                <div class="match-col" id="match-right-col"></div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+                <span class="status-chip" id="match-score-chip">Emparejados: 0 / 4</span>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="resetMatching()">Reiniciar pares</button>
+              </div>
+
+              <div class="feedback-box" id="match-feedback"></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- MÓDULO 2: ALGORITMOS OPERATIVOS ALGEBRAICOS EN C                 -->
+      <!-- ================================================================ -->
+      <section id="modulo-2" class="module-section">
+        <div class="module-header">
+          <div class="module-kicker-row">
+            <span class="data-label">Módulo 2 · 15 minutos</span>
+            <span class="status-chip cyan">RAP 2 · Operaciones algebraicas y potencias de $i$</span>
+            <span class="status-chip" id="badge-m2" style="display: none;">Completado</span>
+          </div>
+          <h2>Algoritmos Operativos Algebraicos en $\mathbb{C}$</h2>
+          <p class="muted">Domina sin calculadora los algoritmos de suma, resta, multiplicación, ciclicidad de $i^n$ y división compleja mediante el conjugado del denominador.</p>
+        </div>
+
+        <!-- ESCENA 3 -->
+        <article class="panel scene-block" id="escena-3">
+          <div class="scene-title-bar">
+            <h3>Escena 3 · Suma, Resta y Multiplicación Compleja</h3>
+            <span class="data-label">5 min · Ejercitador Dinámico</span>
+          </div>
+
+          <div class="split-2">
+            <!-- Columna izquierda: explicación algorítmica -->
+            <div class="well" style="display: grid; gap: var(--space-md);">
+              <span class="data-label">Explicación algorítmica paso a paso</span>
+              <p>Para sumar o restar $(a + bi) \pm (c + di)$, se agrupan partes reales entre sí y partes imaginarias entre sí: $(a \pm c) + (b \pm d)i$.</p>
+              <p>Al <strong>multiplicar</strong> dos números complejos se aplica la propiedad distributiva:</p>
+              <div class="panel-soft" style="font-size: 0.95rem;">
+                $$(a + bi)(c + di) = ac + adi + bci + bdi^2$$
+                <p style="margin-top: var(--space-sm);">Como $i^2 = -1$, el último término cambia de signo:</p>
+                <p style="font-family: var(--font-label); margin-top: var(--space-xs);">$(a + bi)(c + di) = (ac$ <span class="highlight-term">- bd</span>$) + (ad + bc)i$</p>
+              </div>
+              <div class="feedback-box info visible">
+                <strong>Alerta diagnóstica:</strong> El término <span class="highlight-term">- bd</span> proveniente de $i^2 = -1$ es la causa número uno de error en el primer parcial. Siempre verifica el signo de $b \cdot d \cdot i^2$.
+              </div>
+            </div>
+
+            <!-- Columna derecha: ejercitador dinámico -->
+            <div class="well" style="display: grid; gap: var(--space-md);">
+              <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-sm);">
+                <span class="data-label">Ejercitador dinámico (sin calculadora)</span>
+                <span class="status-chip" id="alg-count-chip">Resueltos: 0 / 4</span>
+              </div>
+
+              <div class="control-row">
+                <div class="field-group" style="flex: 1 1 180px;">
+                  <label for="alg-op-select">Tipo de operación</label>
+                  <select id="alg-op-select" onchange="generateAlgProblem()">
+                    <option value="mul">Multiplicación (a + bi)(c + di)</option>
+                    <option value="add">Suma (a + bi) + (c + di)</option>
+                    <option value="sub">Resta (a + bi) - (c + di)</option>
+                  </select>
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="generateAlgProblem()">Nuevo ejercicio</button>
+              </div>
+
+              <div class="panel-soft" style="text-align: center;">
+                <span class="data-label">Operación a resolver</span>
+                <div id="alg-problem-display" style="font-family: var(--font-label); font-size: 1.25rem; font-weight: 600; margin-top: var(--space-xs);"></div>
+              </div>
+
+              <div class="control-row">
+                <div class="field-group" style="flex: 1 1 140px;">
+                  <label for="alg-ans-re">Parte Real resultante (ac - bd)</label>
+                  <input type="number" id="alg-ans-re" step="1" placeholder="Ej: -5">
+                </div>
+                <div class="field-group" style="flex: 1 1 140px;">
+                  <label for="alg-ans-im">Coeficiente Imaginario (ad + bc)</label>
+                  <input type="number" id="alg-ans-im" step="1" placeholder="Ej: 11">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="checkAlgProblem()">Verificar</button>
+              </div>
+
+              <div class="feedback-box" id="alg-feedback"></div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ESCENA 4 -->
+        <article class="panel scene-block" id="escena-4">
+          <div class="scene-title-bar">
+            <h3>Escena 4 · Potencias de la Unidad Imaginaria "$i$" y Ciclicidad</h3>
+            <span class="data-label">5 min · Rueda Cíclica + Juego de Velocidad</span>
+          </div>
+
+          <div class="split-2">
+            <!-- Rueda cíclica interactiva -->
+            <div class="well" style="display: grid; gap: var(--space-md);">
+              <span class="data-label">Rueda cíclica de período 4 (módulo 4)</span>
+              <svg id="svg-i-wheel" viewBox="0 0 320 260" style="width: 100%; height: auto; max-height: 270px;" role="img" aria-label="Rueda cíclica de potencias de i: 1, i, -1, -i"></svg>
+              <div class="control-row">
+                <div class="field-group" style="flex: 1 1 150px;">
+                  <label for="wheel-exp-input">Prueba un exponente n</label>
+                  <input type="number" id="wheel-exp-input" value="2607" min="0" max="99999" oninput="updateWheelFromExp(this.value)">
+                </div>
+                <div class="well" style="flex: 1.4 1 200px; background: var(--surface-container-low);" id="wheel-breakdown">
+                  $2607 = 4 \times 651 + 3 \implies i^{2607} = i^3 = -i$
+                </div>
+              </div>
+            </div>
+
+            <!-- Juego de velocidad de evocación -->
+            <div class="well" style="display: grid; gap: var(--space-md);">
+              <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-sm);">
+                <span class="data-label">Juego de velocidad de evocación (5 preguntas)</span>
+                <div style="display: flex; gap: var(--space-xs); align-items: center;">
+                  <span class="status-chip amber" id="speed-timer-chip">Tiempo: 10s</span>
+                  <button type="button" class="btn btn-ghost btn-sm" id="btn-speed-untimed" onclick="toggleSpeedUntimed()">Modo DUA sin límite</button>
+                </div>
+              </div>
+
+              <p class="muted" style="font-size: 0.9rem;">Calcula el valor exacto de potencias altas de $i$ aplicando $n \bmod 4$ en menos de 10 segundos por pregunta.</p>
+
+              <div id="speed-idle" style="display: grid; gap: var(--space-sm);">
+                <button type="button" class="btn btn-primary" onclick="startSpeedGame()">Iniciar prueba de velocidad (5 retos)</button>
+              </div>
+
+              <div id="speed-active" style="display: none; gap: var(--space-md);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span class="data-label" id="speed-q-num">Pregunta 1 de 5</span>
+                  <span class="status-chip cyan" id="speed-score-live">Aciertos: 0</span>
+                </div>
+                <div class="panel-soft" style="text-align: center; font-family: var(--font-label); font-size: 1.75rem; font-weight: 600;" id="speed-q-text"></div>
+                <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-sm);">
+                  <button type="button" class="btn btn-secondary" onclick="answerSpeed('1')">1</button>
+                  <button type="button" class="btn btn-secondary" onclick="answerSpeed('i')">i</button>
+                  <button type="button" class="btn btn-secondary" onclick="answerSpeed('-1')">-1</button>
+                  <button type="button" class="btn btn-secondary" onclick="answerSpeed('-i')">-i</button>
+                </div>
+              </div>
+
+              <div class="feedback-box" id="speed-feedback"></div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ESCENA 5 -->
+        <article class="panel scene-block" id="escena-5">
+          <div class="scene-title-bar">
+            <h3>Escena 5 · Conjugado y División Compleja</h3>
+            <span class="data-label">5 min · Pasos Enlazados y Práctica Explícita</span>
+          </div>
+
+          <div class="split-2">
+            <!-- Actividad de pasos enlazados (ordenar etapas) -->
+            <div class="well" style="display: grid; gap: var(--space-md);">
+              <span class="data-label">Actividad de pasos enlazados · Ordena el algoritmo</span>
+              <p style="font-size: 0.95rem;">Ordena de 1 a 4 las etapas para dividir $\dfrac{3 + 2i}{1 - 4i}$ usando el conjugado del denominador:</p>
+              <div id="div-steps-list" style="display: grid; gap: var(--space-sm);"></div>
+              <div style="display: flex; gap: var(--space-sm); flex-wrap: wrap;">
+                <button type="button" class="btn btn-primary" onclick="checkDivStepsOrder()">Verificar secuencia</button>
+                <button type="button" class="btn btn-secondary" onclick="shuffleDivSteps()">Desordenar de nuevo</button>
+              </div>
+              <div class="feedback-box" id="div-order-feedback"></div>
+            </div>
+
+            <!-- Ejercitador explícito de conjugado y división (Actividad 1) -->
+            <div class="well" style="display: grid; gap: var(--space-md);">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+                <span class="data-label">Práctica guiada · Escribe el conjugado</span>
+                <span class="status-chip" id="div-count-chip">Divisiones resueltas: 0 / 2</span>
+              </div>
+
+              <div class="panel-soft" style="text-align: center;">
+                <span class="data-label">Divide los números complejos</span>
+                <div id="div-problem-display" style="font-family: var(--font-label); font-size: 1.25rem; font-weight: 600; margin-top: var(--space-xs);"></div>
+              </div>
+
+              <div class="control-row">
+                <div class="field-group" style="flex: 1 1 150px;">
+                  <label for="div-conj-input">Conjugado del denominador (ej: 2 - 3i)</label>
+                  <input type="text" id="div-conj-input" placeholder="Ej: 1 + 2i">
+                </div>
+                <div class="field-group" style="flex: 1 1 130px;">
+                  <label for="div-denom-input">Denominador real (c² + d²)</label>
+                  <input type="number" id="div-denom-input" placeholder="Ej: 5">
+                </div>
+              </div>
+              <div class="control-row">
+                <div class="field-group" style="flex: 1 1 140px;">
+                  <label for="div-num-re">Numerador Real</label>
+                  <input type="number" id="div-num-re" placeholder="Ej: 7">
+                </div>
+                <div class="field-group" style="flex: 1 1 140px;">
+                  <label for="div-num-im">Numerador Imaginario</label>
+                  <input type="number" id="div-num-im" placeholder="Ej: 4">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="checkDivPractice()">Comprobar</button>
+                <button type="button" class="btn btn-secondary" onclick="newDivPractice()">Otro</button>
+              </div>
+              <div class="feedback-box" id="div-practice-feedback"></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- MÓDULO 3: MATRICES Y DETERMINANTES EN R Y C                      -->
+      <!-- ================================================================ -->
+      <section id="modulo-3" class="module-section">
+        <div class="module-header">
+          <div class="module-kicker-row">
+            <span class="data-label">Módulo 3 · 15 minutos</span>
+            <span class="status-chip cyan">RAP 3 · Operaciones con matrices complejas</span>
+            <span class="status-chip cyan">RAP 4 · Determinantes complejos</span>
+            <span class="status-chip" id="badge-m3" style="display: none;">Completado</span>
+          </div>
+          <h2>Evocación de Operaciones con Matrices y Determinantes en $\mathbb{R}$ y $\mathbb{C}$</h2>
+          <p class="muted">Refuerza el álgebra matricial con elementos reales antes de generalizar suma, producto escalar, multiplicación matricial, potencia, determinante e inversa al campo complejo $\mathbb{C}$.</p>
+        </div>
+
+        <!-- ESCENA 6: Matrices en R -->
+        <article class="panel scene-block" id="escena-6">
+          <div class="scene-title-bar">
+            <h3>Escena 6 · Evocación de Matrices con Elementos Reales</h3>
+            <span class="data-label">7 min · Verificador con trazado fila-columna</span>
+          </div>
+
+          <div class="control-row">
+            <div class="field-group" style="flex: 1 1 190px;">
+              <label for="rmat-op">Operación en $\mathbb{R}$</label>
+              <select id="rmat-op" onchange="setupRealMatrixUI()">
+                <option value="mul">Multiplicación (A × B)</option>
+                <option value="add">Suma (A + B)</option>
+                <option value="scale">Escalar (k · A)</option>
+                <option value="pow">Potencia (A²)</option>
+                <option value="det">Determinante det(A)</option>
+                <option value="inv">Inversa (A⁻¹)</option>
+              </select>
+            </div>
+            <div class="field-group" style="flex: 0 1 140px;">
+              <label for="rmat-dim">Dimensión</label>
+              <select id="rmat-dim" onchange="setupRealMatrixUI()">
+                <option value="2">2 × 2</option>
+                <option value="3">3 × 3</option>
+              </select>
+            </div>
+            <div class="field-group" id="rmat-k-wrap" style="flex: 0 1 110px; display: none;">
+              <label for="rmat-k">Escalar k</label>
+              <input type="number" id="rmat-k" value="3" onchange="updateRealMatrixHint()">
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="randomizeRealMatrices()">Nuevos valores</button>
+          </div>
+
+          <div class="split-2">
+            <div class="well" style="display: grid; gap: var(--space-md);">
+              <span class="data-label">Matrices de entrada (haz clic en la celda resultado para ver las flechas de operación)</span>
+              <div style="display: flex; flex-wrap: wrap; gap: var(--space-lg); align-items: center;">
+                <div>
+                  <span class="data-label" style="margin-bottom: var(--space-xs);">Matriz A</span><br>
+                  <div class="matrix-wrap">
+                    <div class="matrix-bracket-l"></div>
+                    <div class="matrix-cells" id="rmat-a-grid"></div>
+                    <div class="matrix-bracket-r"></div>
+                  </div>
+                </div>
+                <div id="rmat-b-container">
+                  <span class="data-label" style="margin-bottom: var(--space-xs);">Matriz B</span><br>
+                  <div class="matrix-wrap">
+                    <div class="matrix-bracket-l"></div>
+                    <div class="matrix-cells" id="rmat-b-grid"></div>
+                    <div class="matrix-bracket-r"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel-soft" id="rmat-trace-box" style="font-family: var(--font-label); font-size: 0.875rem;">
+                Haz clic en una celda de tu respuesta para resaltar la fila/columna y su fórmula.
+              </div>
+            </div>
+
+            <div class="well" style="display: grid; gap: var(--space-md);">
+              <span class="data-label">Ingresa el resultado (usa decimales o fracciones ej: 0.5 o -1/2)</span>
+              <div id="rmat-det-wrap" class="field-group" style="max-width: 220px; display: none;">
+                <label for="rmat-res-det">Determinante det(A)</label>
+                <input type="number" id="rmat-res-det" step="any" placeholder="Valor escalar" onfocus="highlightRealTrace(0, 0)">
+              </div>
+              <div id="rmat-result-area"></div>
+              <div style="display: flex; flex-wrap: wrap; gap: var(--space-sm);">
+                <button type="button" class="btn btn-primary" onclick="verifyRealMatrix()">Verificar resultado</button>
+                <button type="button" class="btn btn-ghost" onclick="revealRealMatrix()">Mostrar solución paso a paso</button>
+              </div>
+              <div class="feedback-box" id="rmat-feedback"></div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ESCENA 7: Matrices y Determinantes en C -->
+        <article class="panel scene-block" id="escena-7">
+          <div class="scene-title-bar">
+            <h3>Escena 7 · Matrices y Determinantes con Elementos Imaginarios o Complejos</h3>
+            <span class="data-label">8 min · Laboratorio Complejo</span>
+          </div>
+
+          <div class="control-row">
+            <div class="field-group" style="flex: 1 1 200px;">
+              <label for="cmat-op">Operación en $\mathbb{C}$</label>
+              <select id="cmat-op" onchange="setupComplexMatrixUI()">
+                <option value="mul">Multiplicación (A × B)</option>
+                <option value="add">Suma (A + B)</option>
+                <option value="scale">Escalar complejo (z · A)</option>
+                <option value="pow">Potencia (A²)</option>
+                <option value="det">Determinante det(A) ∈ ℂ</option>
+                <option value="inv">Inversa (A⁻¹)</option>
+              </select>
+            </div>
+            <div class="field-group" style="flex: 0 1 130px;">
+              <label for="cmat-dim">Dimensión</label>
+              <select id="cmat-dim" onchange="setupComplexMatrixUI()">
+                <option value="2">2 × 2</option>
+                <option value="3">3 × 3</option>
+              </select>
+            </div>
+            <div class="field-group" id="cmat-z-wrap" style="flex: 0 1 140px; display: none;">
+              <label for="cmat-z">Escalar z</label>
+              <input type="text" id="cmat-z" value="1 - i" onchange="computeComplexMatrixRef()">
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="loadComplexMatrixPreset('quantum')">Cargar preset cuántico</button>
+            <button type="button" class="btn btn-secondary" onclick="loadComplexMatrixPreset('singular')">Probar matriz singular</button>
+          </div>
+
+          <div class="split-2">
+            <div class="well" style="display: grid; gap: var(--space-md);">
+              <span class="data-label">Matrices complejas editables (formato a + bi, ej: 2-i, 3i, -1)</span>
+              <div style="display: flex; flex-wrap: wrap; gap: var(--space-lg); align-items: center;">
+                <div>
+                  <span class="data-label" style="margin-bottom: var(--space-xs);">Matriz A ∈ ℂⁿˣⁿ</span><br>
+                  <div class="matrix-wrap">
+                    <div class="matrix-bracket-l"></div>
+                    <div class="matrix-cells" id="cmat-a-grid"></div>
+                    <div class="matrix-bracket-r"></div>
+                  </div>
+                </div>
+                <div id="cmat-b-container">
+                  <span class="data-label" style="margin-bottom: var(--space-xs);">Matriz B ∈ ℂⁿˣⁿ</span><br>
+                  <div class="matrix-wrap">
+                    <div class="matrix-bracket-l"></div>
+                    <div class="matrix-cells" id="cmat-b-grid"></div>
+                    <div class="matrix-bracket-r"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="feedback-box" id="cmat-impossibility-box"></div>
+            </div>
+
+            <div class="well" style="display: grid; gap: var(--space-md);">
+              <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-sm);">
+                <span class="data-label">Verificación del estudiante o animación paso a paso</span>
+                <span class="status-chip" id="cmat-done-chip">Verificadas: 0 / 2</span>
+              </div>
+              <div id="cmat-det-wrap" class="field-group" style="max-width: 240px; display: none;">
+                <label for="cmat-res-det">Determinante det(A) ∈ ℂ (ej: -2 + 3i)</label>
+                <input type="text" id="cmat-res-det" placeholder="a + bi">
+              </div>
+              <div id="cmat-result-area"></div>
+              <div style="display: flex; flex-wrap: wrap; gap: var(--space-sm);">
+                <button type="button" class="btn btn-primary" onclick="verifyComplexMatrix()">Verificar mi cálculo</button>
+                <button type="button" class="btn btn-secondary" onclick="animateComplexMatrixSteps()">Animar paso a paso</button>
+              </div>
+              <div class="panel-soft" id="cmat-steps-box" style="font-family: var(--font-label); font-size: 0.85rem; display: none;"></div>
+              <div class="feedback-box" id="cmat-feedback"></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- MÓDULO 4: APLICACIÓN EN COMPUTACIÓN CUÁNTICA                     -->
+      <!-- ================================================================ -->
+      <section id="modulo-4" class="module-section">
+        <div class="module-header">
+          <div class="module-kicker-row">
+            <span class="data-label">Módulo 4 · 15 minutos</span>
+            <span class="status-chip cyan">RAP 5 · Cúbits, Esfera de Bloch y compuertas cuánticas</span>
+            <span class="status-chip" id="badge-m4" style="display: none;">Completado</span>
+          </div>
+          <h2>Aplicación Contextualizada en Computación Cuántica</h2>
+          <p class="muted">Conecta los números complejos y las matrices unitarias con la geometría de un cúbit en la Esfera de Bloch y la acción de las compuertas de Pauli ($X, Y, Z$) y Hadamard ($H$).</p>
+        </div>
+
+        <!-- ESCENA 8: Esfera de Bloch 3D -->
+        <article class="panel scene-block" id="escena-8">
+          <div class="scene-title-bar">
+            <h3>Escena 8 · Representación de Cúbits y la Esfera de Bloch</h3>
+            <span class="data-label">5 min · Simulador 3D Interactivo</span>
+          </div>
+
+          <p>Un cúbit puro se expresa como $|\psi\rangle = \alpha|0\rangle + \beta|1\rangle = \cos(\tfrac{\theta}{2})|0\rangle + e^{i\phi}\sin(\tfrac{\theta}{2})|1\rangle$, donde la amplitud $\beta$ introduce la fase compleja $e^{i\phi} = \cos\phi + i\sin\phi$. Ajusta $\theta$ y $\phi$ para observar cómo cambia el vector de estado sobre la Esfera de Bloch (puedes arrastrar sobre la esfera para rotar la vista 3D).</p>
+
+          <div class="split-asym">
+            <div class="well" style="display: grid; gap: var(--space-sm);">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-sm);">
+                <span class="data-label">Esfera de Bloch 3D (arrastra para rotar cámara)</span>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="resetBlochCamera()">Restablecer vista</button>
+              </div>
+              <div class="bloch-canvas-wrap">
+                <canvas id="bloch-canvas" class="bloch-canvas"></canvas>
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: var(--space-xs);">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="setBlochPreset(0, 0)">|0⟩</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="setBlochPreset(180, 0)">|1⟩</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="setBlochPreset(90, 0)">|+⟩</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="setBlochPreset(90, 180)">|-⟩</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="setBlochPreset(90, 90)">|+i⟩</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="setBlochPreset(90, 270)">|-i⟩</button>
+              </div>
+            </div>
+
+            <div class="well" style="display: grid; gap: var(--space-md);">
+              <span class="data-label">Parámetros del estado cuántico</span>
+              <div class="control-row">
+                <div class="field-group" style="flex: 2 1 180px;">
+                  <label for="bloch-theta-slider">Ángulo polar θ (grados: 0° a 180°)</label>
+                  <input type="range" id="bloch-theta-slider" min="0" max="180" step="1" value="60" oninput="onBlochThetaSlider(this.value)">
+                </div>
+                <div class="field-group" style="flex: 0 1 95px;">
+                  <label for="bloch-theta-num">θ (°)</label>
+                  <input type="number" id="bloch-theta-num" min="0" max="180" step="1" value="60" oninput="onBlochThetaNumber(this.value)">
+                </div>
+              </div>
+
+              <div class="control-row">
+                <div class="field-group" style="flex: 2 1 180px;">
+                  <label for="bloch-phi-slider">Fase azimutal compleja φ (grados: 0° a 360°)</label>
+                  <input type="range" id="bloch-phi-slider" min="0" max="360" step="1" value="90" oninput="onBlochPhiSlider(this.value)">
+                </div>
+                <div class="field-group" style="flex: 0 1 95px;">
+                  <label for="bloch-phi-num">φ (°)</label>
+                  <input type="number" id="bloch-phi-num" min="0" max="360" step="1" value="90" oninput="onBlochPhiNumber(this.value)">
+                </div>
+              </div>
+
+              <div class="panel-soft" style="display: grid; gap: var(--space-sm); font-family: var(--font-label); font-size: 0.9rem;">
+                <div><span class="data-label">Amplitudes complejas:</span></div>
+                <div id="bloch-alpha-text">α = 0.866</div>
+                <div id="bloch-beta-text">β = 0.000 + 0.500i</div>
+                <div style="border-top: var(--hairline); padding-top: var(--space-sm); display: flex; justify-content: space-between; gap: var(--space-md); flex-wrap: wrap;">
+                  <span id="bloch-p0">P(|0⟩) = |α|² = 75.0%</span>
+                  <span id="bloch-p1">P(|1⟩) = |β|² = 25.0%</span>
+                </div>
+                <div class="muted" id="bloch-xyz">Coordenadas Bloch (x, y, z) = (0.00, 0.87, 0.50)</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ESCENA 9: Compuertas Cuánticas -->
+        <article class="panel scene-block" id="escena-9">
+          <div class="scene-title-bar">
+            <h3>Escena 9 · Compuertas Cuánticas y Matrices Complejas</h3>
+            <span class="data-label">5 min · Reto de Multiplicación Matriz–Vector</span>
+          </div>
+
+          <div class="card-grid">
+            <div class="well">
+              <span class="data-label">Pauli-X (Inversor cuántico)</span>
+              <p style="margin-top: var(--space-xs);">$$X = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$$</p>
+              <p class="muted" style="font-size: 0.85rem;">Intercambia las amplitudes de $|0\rangle$ y $|1\rangle$ (rotación $\pi$ en eje X).</p>
+            </div>
+            <div class="well">
+              <span class="data-label">Pauli-Y (Rotación compleja)</span>
+              <p style="margin-top: var(--space-xs);">$$Y = \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}$$</p>
+              <p class="muted" style="font-size: 0.85rem;">Introduce cambio de fase $\pm i$ (rotación $\pi$ en eje Y).</p>
+            </div>
+            <div class="well">
+              <span class="data-label">Pauli-Z (Inversión de fase)</span>
+              <p style="margin-top: var(--space-xs);">$$Z = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$$</p>
+              <p class="muted" style="font-size: 0.85rem;">Invierte el signo de $|1\rangle$ (rotación $\pi$ en eje Z).</p>
+            </div>
+            <div class="well">
+              <span class="data-label">Hadamard (Superposición)</span>
+              <p style="margin-top: var(--space-xs);">$$H = \frac{1}{\sqrt{2}}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}$$</p>
+              <p class="muted" style="font-size: 0.85rem;">Lleva estados base $|0\rangle, |1\rangle$ a superposición equitativa.</p>
+            </div>
+          </div>
+
+          <div class="split-2">
+            <div class="well" style="display: grid; gap: var(--space-md);">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+                <span class="data-label">Actividad 2 · Reto de transformación cuántica</span>
+                <span class="status-chip" id="gate-count-chip">Retos verificados: 0 / 2</span>
+              </div>
+
+              <div class="control-row">
+                <div class="field-group" style="flex: 1 1 200px;">
+                  <label for="gate-challenge-select">Selecciona escenario de transformación</label>
+                  <select id="gate-challenge-select" onchange="loadGateChallenge()">
+                    <option value="0">Reto 1: Compuerta Pauli-Y sobre |ψ⟩ = 0.6|0⟩ + 0.8i|1⟩</option>
+                    <option value="1">Reto 2: Compuerta Pauli-Y sobre |0⟩ = (1, 0)ᵀ</option>
+                    <option value="2">Reto 3: Compuerta Hadamard H sobre |1⟩ = (0, 1)ᵀ</option>
+                    <option value="3">Reto 4: Compuerta Pauli-Z sobre |+i⟩ = 0.707|0⟩ + 0.707i|1⟩</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="panel-soft" id="gate-equation-box" style="font-family: var(--font-label); font-size: 0.95rem;"></div>
+
+              <div class="control-row">
+                <div class="field-group" style="flex: 1 1 140px;">
+                  <label for="gate-ans-alpha">Nueva amplitud α' (ej: 0.8, 0.707)</label>
+                  <input type="text" id="gate-ans-alpha" placeholder="Ej: 0.8">
+                </div>
+                <div class="field-group" style="flex: 1 1 140px;">
+                  <label for="gate-ans-beta">Nueva amplitud β' (ej: 0.6i, -0.707)</label>
+                  <input type="text" id="gate-ans-beta" placeholder="Ej: 0.6i">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="verifyGateChallenge()">Aplicar y verificar</button>
+              </div>
+              <div class="feedback-box" id="gate-feedback"></div>
+            </div>
+
+            <div class="well" style="display: grid; gap: var(--space-sm);">
+              <span class="data-label">Visualización de la transformación en la Esfera de Bloch</span>
+              <div class="bloch-canvas-wrap" style="min-height: 290px;">
+                <canvas id="gate-bloch-canvas" class="bloch-canvas" style="height: 290px;"></canvas>
+              </div>
+              <div style="display: flex; gap: var(--space-md); flex-wrap: wrap; font-family: var(--font-label); font-size: 0.85rem;">
+                <span style="color: var(--data-3);">Estado inicial |ψ⟩</span>
+                <span style="color: var(--tertiary);">Estado transformado U|ψ⟩</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- MÓDULO 5: EVALUACIÓN SUMATIVA Y CIERRE DUA                       -->
+      <!-- ================================================================ -->
+      <section id="modulo-5" class="module-section">
+        <div class="module-header">
+          <div class="module-kicker-row">
+            <span class="data-label">Módulo 5 · 10 minutos</span>
+            <span class="status-chip cyan">Evaluación Sumativa (60%) + Autoevaluación DUA</span>
+            <span class="status-chip" id="badge-m5" style="display: none;">Completado</span>
+          </div>
+          <h2>Escena 10 · Reto de Integración Final y Autoevaluación DUA</h2>
+          <p class="muted">Resuelve los 5 reactivos integradores (uno por cada RAP) para generar tu informe radial de competencias, tu nivel en la rúbrica analítica y tu insignia digital de evocación matemática cuántica.</p>
+        </div>
+
+        <div class="split-asym">
+          <!-- Cuestionario sumativo de 5 reactivos -->
+          <div class="panel" style="display: grid; gap: var(--space-lg);">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+              <span class="data-label">Cuestionario integrador (RAP 1 a RAP 5)</span>
+              <span class="status-chip cyan" id="final-quiz-status">Sin calificar</span>
+            </div>
+
+            <div id="final-quiz-container" style="display: grid; gap: var(--space-lg);"></div>
+
+            <div style="display: flex; flex-wrap: wrap; gap: var(--space-sm);">
+              <button type="button" class="btn btn-primary" onclick="gradeFinalQuiz()">Calificar reto integrador</button>
+              <button type="button" class="btn btn-secondary" onclick="exportProgressReport()">
+                <i data-lucide="download" aria-hidden="true"></i>
+                <span>Exportar informe (.txt)</span>
+              </button>
+            </div>
+            <div class="feedback-box" id="final-quiz-feedback"></div>
+          </div>
+
+          <!-- Informe Radial + Insignia + Autoevaluación DUA -->
+          <div style="display: grid; gap: var(--space-lg);">
+            <div class="panel" style="display: grid; gap: var(--space-md);">
+              <span class="data-label">Informe radial de desempeño en competencias (RAP 1–5)</span>
+              <svg id="radar-svg" viewBox="0 0 340 280" style="width: 100%; height: auto; max-height: 290px;" role="img" aria-label="Gráfico radial de desempeño en los cinco resultados de aprendizaje"></svg>
+              <div id="rubric-level-box" class="well">
+                <span class="data-label">Clasificación según Rúbrica Analítica</span>
+                <p id="rubric-level-text" style="margin-top: var(--space-xs); font-weight: 600;">Completa los laboratorios y el reto final para calcular tu desempeño ponderado (0.0 – 5.0).</p>
+              </div>
+            </div>
+
+            <!-- Insignia Digital -->
+            <div class="panel" id="digital-badge-card" style="display: grid; gap: var(--space-sm); text-align: center;">
+              <span class="data-label">Insignia digital de evocación matemática cuántica</span>
+              <svg id="badge-svg" viewBox="0 0 260 150" style="width: 240px; height: auto; margin: 0 auto;" role="img" aria-label="Insignia digital de evocación matemática cuántica"></svg>
+              <p class="muted" id="badge-status-text" style="font-size: 0.875rem;">Obtén al menos 3 de 5 aciertos en el reto final para desbloquear tu insignia.</p>
+            </div>
+
+            <!-- Autoevaluación DUA y Encuesta -->
+            <div class="panel-soft" style="display: grid; gap: var(--space-md);">
+              <span class="data-label">Autoevaluación DUA y percepción del OVA (5 min)</span>
+              <div class="field-group">
+                <label for="dua-clarity">Claridad de las explicaciones paso a paso y representaciones múltiples</label>
+                <select id="dua-clarity" onchange="saveDuaSurvey()">
+                  <option value="">Selecciona una valoración…</option>
+                  <option value="5">5 · Muy claro y accesible</option>
+                  <option value="4">4 · Claro, me ayudó a evocar</option>
+                  <option value="3">3 · Aceptable</option>
+                  <option value="2">2 · Requiere mayor guía</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label for="dua-transfer">¿Te sientes más preparado para operar en ℂ sin depender ciegamente de la calculadora?</label>
+                <select id="dua-transfer" onchange="saveDuaSurvey()">
+                  <option value="">Selecciona una opción…</option>
+                  <option value="si-total">Sí, comprendo los algoritmos y su uso en cúbits</option>
+                  <option value="si-parcial">Parcialmente, necesito reforzar matrices</option>
+                  <option value="no">Todavía necesito más práctica</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label for="dua-comment">Reflexión breve o sugerencia sobre el OVA</label>
+                <textarea id="dua-comment" placeholder="Escribe qué módulo te resultó más útil o qué dificultad encontraste…" onchange="saveDuaSurvey()"></textarea>
+              </div>
+              <div class="feedback-box" id="dua-survey-feedback"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rúbrica y Matriz Pedagógica desplegable -->
+        <details>
+          <summary>
+            <span>Rúbrica Analítica, Matriz de Alineación Pedagógica y Referencias</span>
+            <span class="data-label">Ver detalle curricular</span>
+          </summary>
+          <div style="display: grid; gap: var(--space-lg);">
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Criterio (Ponderación)</th>
+                    <th>Superior (4.6–5.0)</th>
+                    <th>Alto (4.0–4.5)</th>
+                    <th>Básico (3.0–3.9)</th>
+                    <th>Bajo (1.0–2.9)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Evocación y Operaciones en $\mathbb{C}$ (30%)</strong></td>
+                    <td>Ejecuta con absoluta precisión suma, resta, multiplicación, potencias de $i$ y división por conjugado sin errores de signo.</td>
+                    <td>Aplica adecuadamente los algoritmos con errores aritméticos menores que no afectan el método.</td>
+                    <td>Comete errores en la multiplicación por $i^2$ o en la estructura del conjugado.</td>
+                    <td>Errores severos en algoritmos básicos o desconocimiento del conjugado.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Matrices Complejas y Determinantes (30%)</strong></td>
+                    <td>Opera suma, escalar, producto, potencia, determinante e inversa compleja correctamente.</td>
+                    <td>Opera suma, escalar, producto y potencia con precisión parcial en inversa o determinante.</td>
+                    <td>Presenta dificultad en suma, producto por escalar y multiplicación matricial.</td>
+                    <td>No logra realizar operaciones básicas entre matrices.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Aplicación en Computación Cuántica (40%)</strong></td>
+                    <td>Representa cúbits en la Esfera de Bloch y calcula exactamente su transformación por compuertas complejas.</td>
+                    <td>Representa el cúbit y multiplica matrices complejas con pequeños descuidos de simplificación.</td>
+                    <td>Expresa la superposición pero falla al multiplicar la compuerta por el vector de estado.</td>
+                    <td>No relaciona los números complejos con cúbits ni compuertas cuánticas.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="well">
+              <span class="data-label">Referencias bibliográficas</span>
+              <ul style="margin: var(--space-sm) 0 0; padding-left: var(--space-lg); font-size: 0.9rem; color: var(--on-surface-variant); display: grid; gap: var(--space-xs);">
+                <li>Alpers, B., Demlova, M., Lawson, D., &amp; Mustoe, L. (2020). <em>A Framework for Mathematics Curricula in Engineering Education</em>. SEFI.</li>
+                <li>Boigues, F., Llinares, S., &amp; Estruch, V. D. (2010). Desarrollo de un esquema de la integral definida en estudiantes de ingenierías. <em>RELIME</em>, 13(3), 255–282.</li>
+                <li>Cortas Nordlander, M., &amp; Nordlander, E. (2012). On the concept image of complex numbers. <em>Int. J. Math. Educ. Sci. Technol.</em>, 43(5), 627–641.</li>
+                <li>Gaona, J., &amp; Lopez, P. (2024). Prospective mathematics teachers learning complex numbers using technology. <em>IJMEST</em>, 55(13), 2219–2248.</li>
+                <li>Juric, Z., &amp; Siljak, H. (2022). Rigorous Interpretation of Engineering Formulae for Convolution and Fourier Transform. <em>IEEE Access</em>, 10, 29451–29460.</li>
+                <li>Karakok, G., Roh, K. H., &amp; Oehrtman, M. (2015). Students understanding of the complex unit and integration in the complex plane. <em>IJMEST</em>, 46(4), 533–554.</li>
+                <li>Karam, R. (2020). Schrödinger original struggles with a complex wave function. <em>American Journal of Physics</em>, 88(6), 433–438.</li>
+                <li>Panaoura, A., Elia, I., Gagatsis, A., &amp; Gerasimou, A. (2009). Pedagogical content knowledge and understanding of complex numbers. <em>Journal of Mathematical Behavior</em>, 28(4), 258–264.</li>
+                <li>Soto-Andrade, J. (2014). Metaphors and embodied cognition in the teaching and learning of complex numbers. <em>For the Learning of Mathematics</em>, 34(1), 28–35.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </section>
+    </main>
+
+    <footer>
+      <div>Objeto Virtual de Aprendizaje · Matemáticas Avanzadas para Ingenieros · Enfoque DUA y Constructivismo Mediado por Tecnología.</div>
+      <div>Fuente base: Guión Instruccional «Evocación de Números Complejos y sus Operaciones Aplicadas a la Computación Cuántica» (Santiago de Cali, Colombia).</div>
+    </footer>
+  </div>
+
+  <api-shim></api-shim>
+
+  <script>
+    /* ======================================================================
+       ESTADO GLOBAL Y UTILIDADES DE PERSISTENCIA / SONIDO / MATEMÁTICA
+       ====================================================================== */
+    const DEFAULT_STATE = {
+      duaLarge: false,
+      soundEnabled: true,
+      confidence: null,
+      diagDone: [false, false, false],
+      argandSolved: 0,
+      matchesDone: 0,
+      algSolved: 0,
+      speedBest: 0,
+      speedDone: false,
+      divOrderDone: false,
+      divSolved: 0,
+      rmatSolved: 0,
+      cmatSolved: 0,
+      blochExplored: false,
+      gateSolved: 0,
+      finalQuizAnswers: [null, null, null, null, null],
+      finalQuizGraded: false,
+      finalQuizScore: 0,
+      duaClarity: '',
+      duaTransfer: '',
+      duaComment: ''
+    };
+
+    let ovaState = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    let audioCtx = null;
+
+    function getCssToken(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#63c7d6';
+    }
+
+    function playTone(type) {
+      if (!ovaState.soundEnabled) return;
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        if (!audioCtx) audioCtx = new Ctx();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+        if (type === 'ok') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.14);
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+          osc.start(now);
+          osc.stop(now + 0.24);
+        } else {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.exponentialRampToValueAtTime(165, now + 0.18);
+          gain.gain.setValueAtTime(0.05, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+          osc.start(now);
+          osc.stop(now + 0.24);
+        }
+      } catch (e) {
+        /* Audio context blocked or unavailable */
+      }
+    }
+
+    async function persistState() {
+      updateProgressUI();
+      try {
+        if (window.notebookAppApi && typeof window.notebookAppApi.setAppState === 'function') {
+          await window.notebookAppApi.setAppState(ovaState);
+        }
+      } catch (e) {
+        /* Ignorar en entorno sin host */
+      }
+    }
+
+    function renderMathIn(el) {
+      if (!el || typeof window.renderMathInElement !== 'function') return;
+      try {
+        window.renderMathInElement(el, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      } catch (e) {
+        /* KaTeX fallback */
+      }
+    }
+
+    function showFeedback(id, kind, html) {
+      const box = document.getElementById(id);
+      if (!box) return;
+      box.className = 'feedback-box visible ' + kind;
+      box.innerHTML = html;
+      renderMathIn(box);
+    }
+
+    /* ======================================================================
+       PARSEO Y ÁLGEBRA DE NÚMEROS COMPLEJOS
+       ====================================================================== */
+    function evalSimpleScalar(expr) {
+      let s = String(expr || '').trim().replace(/\s+/g, '');
+      if (!s) return NaN;
+      s = s.replace(/sqrt\(2\)/gi, String(Math.SQRT2))
+           .replace(/sqrt\(3\)/gi, String(Math.sqrt(3)))
+           .replace(/√2/g, String(Math.SQRT2))
+           .replace(/√3/g, String(Math.sqrt(3)));
+      if (/^[+-]?\d+(\.\d+)?\/[+-]?\d+(\.\d+)?$/.test(s)) {
+        const parts = s.split('/');
+        const num = parseFloat(parts[0]);
+        const den = parseFloat(parts[1]);
+        return den === 0 ? NaN : num / den;
+      }
+      if (/^[+-]?(\d+(\.\d+)?|\.\d+)$/.test(s)) {
+        return parseFloat(s);
+      }
+      return NaN;
+    }
+
+    function parseComplex(input) {
+      let s = String(input || '').trim().toLowerCase();
+      if (!s) return null;
+      s = s.replace(/\s+/g, '').replace(/j/g, 'i').replace(/,/g, '.');
+      s = s.replace(/sqrt\(2\)/g, '1.41421356').replace(/sqrt\(3\)/g, '1.7320508').replace(/√2/g, '1.41421356');
+      if (s === 'i' || s === '+i') return { re: 0, im: 1 };
+      if (s === '-i') return { re: 0, im: -1 };
+
+      // Tokenizar por + o - iniciales
+      const tokens = s.match(/[+-]?[^+-]+/g);
+      if (!tokens) return null;
+      let re = 0;
+      let im = 0;
+      for (let t of tokens) {
+        if (t.endsWith('i')) {
+          let coef = t.slice(0, -1);
+          if (coef === '' || coef === '+') coef = '1';
+          else if (coef === '-') coef = '-1';
+          else if (coef.endsWith('*')) coef = coef.slice(0, -1);
+          const v = evalSimpleScalar(coef);
+          if (Number.isNaN(v)) return null;
+          im += v;
+        } else {
+          const v = evalSimpleScalar(t);
+          if (Number.isNaN(v)) return null;
+          re += v;
+        }
+      }
+      return { re: re, im: im };
+    }
+
+    function cFmt(c, decimals) {
+      const d = decimals !== undefined ? decimals : 2;
+      const eps = 1e-6;
+      const re = Math.abs(c.re) < eps ? 0 : Number(c.re.toFixed(d));
+      const im = Math.abs(c.im) < eps ? 0 : Number(c.im.toFixed(d));
+      const fmtNum = (n) => Number.isInteger(n) ? String(n) : String(Number(n.toFixed(d)));
+      if (im === 0) return fmtNum(re);
+      const absIm = Math.abs(im);
+      const imStr = absIm === 1 ? 'i' : fmtNum(absIm) + 'i';
+      if (re === 0) return im < 0 ? '-' + imStr : imStr;
+      return fmtNum(re) + (im < 0 ? ' - ' : ' + ') + imStr;
+    }
+
+    function cAdd(a, b) { return { re: a.re + b.re, im: a.im + b.im }; }
+    function cSub(a, b) { return { re: a.re - b.re, im: a.im - b.im }; }
+    function cMul(a, b) { return { re: a.re * b.re - a.im * b.im, im: a.re * b.im + a.im * b.re }; }
+    function cDiv(a, b) {
+      const den = b.re * b.re + b.im * b.im;
+      if (den < 1e-10) return null;
+      return {
+        re: (a.re * b.re + a.im * b.im) / den,
+        im: (a.im * b.re - a.re * b.im) / den
+      };
+    }
+    function cAbs(a) { return Math.hypot(a.re, a.im); }
+    function cEq(a, b, tol) {
+      const t = tol || 0.04;
+      return Math.abs(a.re - b.re) <= t && Math.abs(a.im - b.im) <= t;
+    }
+
+    /* ======================================================================
+       DUA & BARRA SUPERIOR
+       ====================================================================== */
+    function toggleDuaFont() {
+      ovaState.duaLarge = !ovaState.duaLarge;
+      document.documentElement.classList.toggle('dua-large', ovaState.duaLarge);
+      const btn = document.getElementById('btn-dua-font');
+      if (btn) btn.classList.toggle('btn-active', ovaState.duaLarge);
+      persistState();
+    }
+
+    function toggleSound() {
+      ovaState.soundEnabled = !ovaState.soundEnabled;
+      const lbl = document.getElementById('label-sound');
+      if (lbl) lbl.textContent = ovaState.soundEnabled ? 'Sonido guía: Activo' : 'Sonido guía: Silenciado';
+      persistState();
+    }
+
+    function handleResetOva(btn) {
+      if (!btn) return;
+      if (btn.dataset.armed !== 'true') {
+        btn.dataset.armed = 'true';
+        btn.innerHTML = '<span>Confirmar reinicio</span>';
+        setTimeout(() => {
+          if (btn && btn.dataset.armed === 'true') {
+            btn.dataset.armed = 'false';
+            btn.innerHTML = '<span>Reiniciar progreso</span>';
+          }
+        }, 3500);
+        return;
+      }
+      btn.dataset.armed = 'false';
+      btn.innerHTML = '<span>Reiniciar progreso</span>';
+      ovaState = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      restoreUIFromState();
+      persistState();
+    }
+
+    /* ======================================================================
+       MÓDULO 1: ESCENA 1 (COMPARADOR, LOCUCIÓN, DIAGNÓSTICO)
+       ====================================================================== */
+    let compareMode = 'bit';
+    function setQuantumCompareMode(mode) {
+      compareMode = mode;
+      const bBit = document.getElementById('btn-mode-bit');
+      const bQubit = document.getElementById('btn-mode-qubit');
+      if (bBit) bBit.classList.toggle('btn-active', mode === 'bit');
+      if (bQubit) bQubit.classList.toggle('btn-active', mode === 'qubit');
+      drawBitQubitSvg();
+      const cap = document.getElementById('compare-caption');
+      if (cap) {
+        cap.textContent = mode === 'bit'
+          ? 'Un bit clásico solo puede situarse en uno de los polos discretos: 0 lógico o 1 lógico.'
+          : 'Un cúbit puede habitar cualquier punto de la Esfera de Bloch gracias a amplitudes complejas α y β en superposición.';
+      }
+    }
+
+    function drawBitQubitSvg() {
+      const svg = document.getElementById('svg-bit-qubit');
+      if (!svg) return;
+      const cPrimary = getCssToken('--primary');
+      const cSage = getCssToken('--tertiary');
+      const cAmber = getCssToken('--data-3');
+      const cMuted = getCssToken('--on-surface-variant');
+      const cText = getCssToken('--on-surface');
+      const cLine = getCssToken('--outline');
+
+      if (compareMode === 'bit') {
+        svg.innerHTML = `
+          <rect x="20" y="25" width="160" height="160" rx="10" fill="none" stroke="${cLine}" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <circle cx="100" cy="60" r="18" fill="${cPrimary}" opacity="0.2" stroke="${cPrimary}" stroke-width="2"/>
+          <text x="100" y="65" text-anchor="middle" fill="${cText}" font-family="Geist Mono, monospace" font-size="14" font-weight="600">0</text>
+          <circle cx="100" cy="150" r="18" fill="none" stroke="${cLine}" stroke-width="1.5"/>
+          <text x="100" y="155" text-anchor="middle" fill="${cMuted}" font-family="Geist Mono, monospace" font-size="14">1</text>
+          <text x="100" y="202" text-anchor="middle" fill="${cMuted}" font-family="Geist Mono, monospace" font-size="11">BIT CLÁSICO (DISCRETO)</text>
+
+          <line x1="210" y1="25" x2="210" y2="185" stroke="${cLine}" stroke-width="1"/>
+          <text x="315" y="90" text-anchor="middle" fill="${cText}" font-family="Instrument Sans, sans-serif" font-size="14" font-weight="600">Estado determinista</text>
+          <text x="315" y="114" text-anchor="middle" fill="${cMuted}" font-family="Plus Jakarta Sans, sans-serif" font-size="12">Solo 0 o 1 en cada instante.</text>
+          <text x="315" y="134" text-anchor="middle" fill="${cMuted}" font-family="Plus Jakarta Sans, sans-serif" font-size="12">No requiere fase compleja.</text>
+        `;
+      } else {
+        svg.innerHTML = `
+          <circle cx="105" cy="105" r="70" fill="none" stroke="${cPrimary}" stroke-width="1.6"/>
+          <ellipse cx="105" cy="105" rx="70" ry="22" fill="none" stroke="${cLine}" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <line x1="105" y1="25" x2="105" y2="185" stroke="${cLine}" stroke-width="1"/>
+          <line x1="25" y1="105" x2="185" y2="105" stroke="${cLine}" stroke-width="1"/>
+          <text x="105" y="22" text-anchor="middle" fill="${cSage}" font-family="Geist Mono, monospace" font-size="12">|0⟩</text>
+          <text x="105" y="198" text-anchor="middle" fill="${cMuted}" font-family="Geist Mono, monospace" font-size="12">|1⟩</text>
+          <line x1="105" y1="105" x2="148" y2="55" stroke="${cAmber}" stroke-width="2.5"/>
+          <circle cx="148" cy="55" r="6" fill="${cAmber}"/>
+          <text x="158" y="52" fill="${cAmber}" font-family="Geist Mono, monospace" font-size="12">|ψ⟩</text>
+
+          <text x="310" y="75" text-anchor="middle" fill="${cText}" font-family="Instrument Sans, sans-serif" font-size="14" font-weight="600">|ψ⟩ = α|0⟩ + β|1⟩</text>
+          <text x="310" y="102" text-anchor="middle" fill="${cPrimary}" font-family="Geist Mono, monospace" font-size="12">α, β ∈ ℂ   y   |α|² + |β|² = 1</text>
+          <text x="310" y="128" text-anchor="middle" fill="${cMuted}" font-family="Plus Jakarta Sans, sans-serif" font-size="12">Superposición + fase e^(iφ)</text>
+          <text x="310" y="148" text-anchor="middle" fill="${cMuted}" font-family="Plus Jakarta Sans, sans-serif" font-size="12">Gobernado por matrices en ℂ.</text>
+        `;
+      }
+    }
+
+    function toggleTranscriptScene1() {
+      const box = document.getElementById('transcript-s1');
+      if (!box) return;
+      const open = box.style.display === 'none';
+      box.style.display = open ? 'block' : 'none';
+      renderMathIn(box);
+    }
+
+    function toggleSpeechScene1() {
+      const btn = document.getElementById('btn-speech-s1');
+      if (!('speechSynthesis' in window)) {
+        const box = document.getElementById('transcript-s1');
+        if (box) box.style.display = 'block';
+        return;
+      }
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        if (btn) btn.innerHTML = '<span>Escuchar locución</span>';
+        return;
+      }
+      const msg = new SpeechSynthesisUtterance(
+        'Bienvenido, futuro ingeniero de sistemas. Durante siglos, los números imaginarios parecían una abstracción pura; hoy gobiernan la fase de los cúbits en la computación cuántica. Al operar con i y con matrices complejas sin depender ciegamente de una calculadora, construyes la base matemática para diseñar algoritmos cuánticos reales.'
+      );
+      msg.lang = 'es-CO';
+      msg.rate = 0.98;
+      msg.onend = () => {
+        if (btn) btn.innerHTML = '<span>Escuchar locución</span>';
+      };
+      window.speechSynthesis.speak(msg);
+      if (btn) btn.innerHTML = '<span>Detener locución</span>';
+    }
+
+    function toggleDiagnosticBox() {
+      const box = document.getElementById('diagnostic-box');
+      if (!box) return;
+      const show = box.style.display === 'none';
+      box.style.display = show ? 'grid' : 'none';
+      renderMathIn(box);
+    }
+
+    function setConfidence(level) {
+      ovaState.confidence = level;
+      for (let i = 1; i <= 5; i++) {
+        const b = document.getElementById('conf-' + i);
+        if (b) b.classList.toggle('active', i === level);
+      }
+      const st = document.getElementById('conf-status');
+      if (st) st.textContent = `Nivel de confianza inicial registrado: ${level} / 5.`;
+      playTone('ok');
+      persistState();
+    }
+
+    const DIAG_ANSWERS = [
+      { correct: 1, ok: `Exacto: por definición $i^2 = -1$ (o $j^2 = -1$ en ingeniería).`, err: `Recuerda que en $\\mathbb{R}$ ningún cuadrado es negativo; en $\\mathbb{C}$ se define $i^2 = -1$.` },
+      { correct: 1, ok: `Correcto: $x^2 = -1 \\implies x = \\pm\\sqrt{-1} = \\pm i$.`, err: `Si reemplazas $x=1$, obtienes $1^2+1=2 \\neq 0$. Las raíces son $x = \\pm i$.` },
+      { correct: 0, ok: `Bien: $\\operatorname{Re}(z) = -4$ y la parte imaginaria es el coeficiente real $b = 7$ (sin incluir la $i$).`, err: `Revisa la forma $z = a + bi$: $a = -4$ es la parte real y $b = 7$ es la parte imaginaria.` }
+    ];
+
+    function answerDiag(qIdx, optIdx, btnEl) {
+      const item = DIAG_ANSWERS[qIdx];
+      if (!item) return;
+      const parent = btnEl ? btnEl.parentElement : null;
+      if (parent) {
+        parent.querySelectorAll('.option-btn').forEach((b, idx) => {
+          b.classList.remove('correct', 'wrong', 'selected');
+          if (idx === optIdx) b.classList.add(optIdx === item.correct ? 'correct' : 'wrong');
+        });
+      }
+      if (optIdx === item.correct) {
+        ovaState.diagDone[qIdx] = true;
+        playTone('ok');
+        showFeedback('diag-fb-' + qIdx, 'ok', item.ok);
+      } else {
+        playTone('err');
+        showFeedback('diag-fb-' + qIdx, 'err', item.err);
+      }
+      persistState();
+    }
+
+    /* ======================================================================
+       MÓDULO 1: ESCENA 2 (PLANO DE ARGAND + EMPAREJAMIENTO)
+       ====================================================================== */
+    const ARGAND_CHALLENGES = [
+      { prompt: `Ubica el vector complejo $z_1 = 3 + 2i$ en el Plano de Argand.`, targetA: 3, targetB: 2, hint: `Parte real $a = 3$ a la derecha y parte imaginaria $b = 2$ hacia arriba.` },
+      { prompt: `Ubica el vector complejo $z_2 = -4 + 3i$ en el segundo cuadrante.`, targetA: -4, targetB: 3, hint: `Parte real $a = -4$ a la izquierda y $b = 3$ hacia arriba ($r = 5$).` },
+      { prompt: `Ubica el complejo cuya forma polar es $r = 4,\\ \\theta = -90^\\circ$ (es decir $4 e^{-i\\pi/2}$).`, targetA: 0, targetB: -4, hint: `$a = 4\\cos(-90^\\circ) = 0$ y $b = 4\\sin(-90^\\circ) = -4$, luego $z = -4i$.` }
+    ];
+
+    let currentArgandIdx = 0;
+    let userArgand = { a: 1, b: 1 };
+    let argandDragging = false;
+
+    function initArgandInteractions() {
+      const svg = document.getElementById('argand-svg');
+      if (!svg) return;
+      const toCoords = (clientX, clientY) => {
+        const rect = svg.getBoundingClientRect();
+        const x = ((clientX - rect.left) / rect.width) * 360;
+        const y = ((clientY - rect.top) / rect.height) * 360;
+        // centro (180, 180), escala 30px por unidad (-5 a +5)
+        let a = Math.round(((x - 180) / 30) * 2) / 2;
+        let b = Math.round(((180 - y) / 30) * 2) / 2;
+        a = Math.max(-5, Math.min(5, a));
+        b = Math.max(-5, Math.min(5, b));
+        userArgand = { a, b };
+        const inA = document.getElementById('argand-input-a');
+        const inB = document.getElementById('argand-input-b');
+        if (inA) inA.value = a;
+        if (inB) inB.value = b;
+        drawArgandPlane();
+      };
+
+      svg.addEventListener('pointerdown', (e) => {
+        argandDragging = true;
+        toCoords(e.clientX, e.clientY);
+      });
+      window.addEventListener('pointermove', (e) => {
+        if (argandDragging) toCoords(e.clientX, e.clientY);
+      });
+      window.addEventListener('pointerup', () => {
+        argandDragging = false;
+      });
+      drawArgandPlane();
+    }
+
+    function syncArgandFromInputs() {
+      const inA = document.getElementById('argand-input-a');
+      const inB = document.getElementById('argand-input-b');
+      userArgand.a = Math.max(-5, Math.min(5, parseFloat(inA ? inA.value : 0) || 0));
+      userArgand.b = Math.max(-5, Math.min(5, parseFloat(inB ? inB.value : 0) || 0));
+      drawArgandPlane();
+    }
+
+    function drawArgandPlane(highlightOk) {
+      const svg = document.getElementById('argand-svg');
+      if (!svg) return;
+      const cPrimary = getCssToken('--primary');
+      const cSage = getCssToken('--tertiary');
+      const cGrid = getCssToken('--outline-variant');
+      const cAxis = getCssToken('--outline');
+      const cMuted = getCssToken('--on-surface-variant');
+      const cText = getCssToken('--on-surface');
+      const vecColor = highlightOk ? cSage : cPrimary;
+
+      let lines = '';
+      for (let i = -5; i <= 5; i++) {
+        const pos = 180 + i * 30;
+        lines += `<line x1="${pos}" y1="20" x2="${pos}" y2="340" stroke="${i === 0 ? cAxis : cGrid}" stroke-width="${i === 0 ? 1.6 : 1}"/>`;
+        lines += `<line x1="20" y1="${pos}" x2="340" y2="${pos}" stroke="${i === 0 ? cAxis : cGrid}" stroke-width="${i === 0 ? 1.6 : 1}"/>`;
+        if (i !== 0 && i % 2 === 0) {
+          lines += `<text x="${pos}" y="195" text-anchor="middle" fill="${cMuted}" font-family="Geist Mono, monospace" font-size="10">${i}</text>`;
+          lines += `<text x="168" y="${184 - i * 30}" text-anchor="end" fill="${cMuted}" font-family="Geist Mono, monospace" font-size="10">${i}i</text>`;
+        }
+      }
+
+      const px = 180 + userArgand.a * 30;
+      const py = 180 - userArgand.b * 30;
+      const r = Math.hypot(userArgand.a, userArgand.b);
+      let thetaDeg = (Math.atan2(userArgand.b, userArgand.a) * 180) / Math.PI;
+      if (thetaDeg < 0) thetaDeg += 360;
+
+      svg.innerHTML = `
+        ${lines}
+        <text x="342" y="172" text-anchor="end" fill="${cPrimary}" font-family="Geist Mono, monospace" font-size="11" font-weight="600">Re</text>
+        <text x="190" y="28" fill="${cPrimary}" font-family="Geist Mono, monospace" font-size="11" font-weight="600">Im</text>
+        <line x1="${px}" y1="180" x2="${px}" y2="${py}" stroke="${cMuted}" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="180" y1="${py}" x2="${px}" y2="${py}" stroke="${cMuted}" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="180" y1="180" x2="${px}" y2="${py}" stroke="${vecColor}" stroke-width="2.5"/>
+        <circle cx="${px}" cy="${py}" r="7" fill="${vecColor}" stroke="${cText}" stroke-width="1.5"/>
+        <text x="${Math.min(310, Math.max(45, px + 10))}" y="${Math.max(30, py - 10)}" fill="${cText}" font-family="Geist Mono, monospace" font-size="12" font-weight="600">${cFmt({ re: userArgand.a, im: userArgand.b }, 1)}</text>
+      `;
+
+      const cartEl = document.getElementById('argand-readout-cart');
+      const polEl = document.getElementById('argand-readout-polar');
+      if (cartEl) cartEl.textContent = `Cartesiana: z = ${cFmt({ re: userArgand.a, im: userArgand.b }, 1)}`;
+      if (polEl) polEl.textContent = `Polar: r = ${r.toFixed(2)}, θ = ${thetaDeg.toFixed(0)}°`;
+    }
+
+    function checkArgandChallenge() {
+      const ch = ARGAND_CHALLENGES[currentArgandIdx];
+      const ok = Math.abs(userArgand.a - ch.targetA) <= 0.25 && Math.abs(userArgand.b - ch.targetB) <= 0.25;
+      drawArgandPlane(ok);
+      if (ok) {
+        ovaState.argandSolved = Math.max(ovaState.argandSolved, currentArgandIdx + 1);
+        playTone('ok');
+        const r = Math.hypot(ch.targetA, ch.targetB).toFixed(2);
+        const deg = ((Math.atan2(ch.targetB, ch.targetA) * 180) / Math.PI).toFixed(1);
+        showFeedback('argand-feedback', 'ok', `¡Correcto! El vector está ubicado exactamente en $(${ch.targetA}, ${ch.targetB})$, con módulo $r = ${r}$ y argumento $\\theta = ${deg}^\\circ$.`);
+      } else {
+        playTone('err');
+        const userR = Math.hypot(userArgand.a, userArgand.b).toFixed(2);
+        showFeedback('argand-feedback', 'err', `Ubicaste $(${userArgand.a}, ${userArgand.b})$ con $r = ${userR}$. Revisa: ${ch.hint}`);
+      }
+      persistState();
+    }
+
+    function nextArgandChallenge() {
+      currentArgandIdx = (currentArgandIdx + 1) % ARGAND_CHALLENGES.length;
+      const ch = ARGAND_CHALLENGES[currentArgandIdx];
+      const chip = document.getElementById('argand-challenge-counter');
+      const pr = document.getElementById('argand-prompt');
+      if (chip) chip.textContent = `Reto ${currentArgandIdx + 1} de ${ARGAND_CHALLENGES.length}`;
+      if (pr) {
+        pr.innerHTML = ch.prompt;
+        renderMathIn(pr);
+      }
+      const fb = document.getElementById('argand-feedback');
+      if (fb) fb.className = 'feedback-box';
+    }
+
+    // Emparejamiento Cartesiano - Polar
+    const MATCH_PAIRS = [
+      { id: 0, left: `$z_1 = 1 + i$`, right: `$r = \\sqrt{2},\\ \\theta = 45^\\circ\\ (\\sqrt{2}e^{i\\pi/4})$` },
+      { id: 1, left: `$z_2 = 3i$`, right: `$r = 3,\\ \\theta = 90^\\circ\\ (3e^{i\\pi/2})$` },
+      { id: 2, left: `$z_3 = -2$`, right: `$r = 2,\\ \\theta = 180^\\circ\\ (2e^{i\\pi})$` },
+      { id: 3, left: `$z_4 = 3 - 4i$`, right: `$r = 5,\\ \\theta \\approx -53.1^\\circ$` }
+    ];
+    let selectedLeftMatch = null;
+    let matchedIds = [];
+
+    function renderMatching() {
+      const lCol = document.getElementById('match-left-col');
+      const rCol = document.getElementById('match-right-col');
+      if (!lCol || !rCol) return;
+      const rightOrder = [2, 0, 3, 1];
+      lCol.innerHTML = MATCH_PAIRS.map((p) => {
+        const isDone = matchedIds.includes(p.id);
+        const isSel = selectedLeftMatch === p.id;
+        return `<button type="button" class="option-btn ${isDone ? 'correct' : (isSel ? 'selected' : '')}" onclick="pickLeftMatch(${p.id})" ${isDone ? 'disabled' : ''}><span>${p.left}</span></button>`;
+      }).join('');
+      rCol.innerHTML = rightOrder.map((idx) => {
+        const p = MATCH_PAIRS[idx];
+        const isDone = matchedIds.includes(p.id);
+        return `<button type="button" class="option-btn ${isDone ? 'correct' : ''}" onclick="pickRightMatch(${p.id})" ${isDone ? 'disabled' : ''}><span>${p.right}</span></button>`;
+      }).join('');
+      renderMathIn(lCol);
+      renderMathIn(rCol);
+      const chip = document.getElementById('match-score-chip');
+      if (chip) chip.textContent = `Emparejados: ${matchedIds.length} / 4`;
+    }
+
+    function pickLeftMatch(id) {
+      selectedLeftMatch = id;
+      renderMatching();
+    }
+
+    function pickRightMatch(id) {
+      if (selectedLeftMatch === null) {
+        showFeedback('match-feedback', 'info', 'Selecciona primero una forma cartesiana de la columna izquierda.');
+        return;
+      }
+      if (selectedLeftMatch === id) {
+        matchedIds.push(id);
+        selectedLeftMatch = null;
+        ovaState.matchesDone = matchedIds.length;
+        playTone('ok');
+        showFeedback('match-feedback', 'ok', `¡Par correcto! Se cumple $r = \\sqrt{a^2+b^2}$ y $\\theta = \\tan^{-1}(b/a)$.`);
+      } else {
+        playTone('err');
+        showFeedback('match-feedback', 'err', `No coinciden. Calcula el módulo $r = \\sqrt{a^2+b^2}$ y verifica el cuadrante del ángulo $\\theta$.`);
+        selectedLeftMatch = null;
+      }
+      renderMatching();
+      persistState();
+    }
+
+    function resetMatching() {
+      matchedIds = [];
+      selectedLeftMatch = null;
+      renderMatching();
+      const fb = document.getElementById('match-feedback');
+      if (fb) fb.className = 'feedback-box';
+    }
+
+    /* ======================================================================
+       MÓDULO 2: ESCENA 3 (SUMA, RESTA, MULTIPLICACIÓN)
+       ====================================================================== */
+    let currentAlgProb = { op: 'mul', a: 2, b: 3, c: 1, d: 4 };
+
+    function generateAlgProblem() {
+      const sel = document.getElementById('alg-op-select');
+      const op = sel ? sel.value : 'mul';
+      const rnd = () => {
+        const arr = [-4, -3, -2, -1, 1, 2, 3, 4, 5];
+        return arr[Math.floor(Math.random() * arr.length)];
+      };
+      currentAlgProb = { op, a: rnd(), b: rnd(), c: rnd(), d: rnd() };
+      const z1 = cFmt({ re: currentAlgProb.a, im: currentAlgProb.b }, 0);
+      const z2 = cFmt({ re: currentAlgProb.c, im: currentAlgProb.d }, 0);
+      const sym = op === 'mul' ? '·' : (op === 'add' ? '+' : '−');
+      const disp = document.getElementById('alg-problem-display');
+      if (disp) disp.textContent = `(${z1}) ${sym} (${z2})`;
+      const reIn = document.getElementById('alg-ans-re');
+      const imIn = document.getElementById('alg-ans-im');
+      if (reIn) reIn.value = '';
+      if (imIn) imIn.value = '';
+      const fb = document.getElementById('alg-feedback');
+      if (fb) fb.className = 'feedback-box';
+    }
+
+    function checkAlgProblem() {
+      const reIn = document.getElementById('alg-ans-re');
+      const imIn = document.getElementById('alg-ans-im');
+      const uRe = parseFloat(reIn ? reIn.value : '');
+      const uIm = parseFloat(imIn ? imIn.value : '');
+      if (Number.isNaN(uRe) || Number.isNaN(uIm)) {
+        showFeedback('alg-feedback', 'err', 'Ingresa valores numéricos en ambos campos antes de verificar.');
+        return;
+      }
+      const { op, a, b, c, d } = currentAlgProb;
+      let expRe, expIm;
+      if (op === 'mul') {
+        expRe = a * c - b * d;
+        expIm = a * d + b * c;
+      } else if (op === 'add') {
+        expRe = a + c;
+        expIm = b + d;
+      } else {
+        expRe = a - c;
+        expIm = b - d;
+      }
+
+      if (uRe === expRe && uIm === expIm) {
+        ovaState.algSolved += 1;
+        playTone('ok');
+        const chip = document.getElementById('alg-count-chip');
+        if (chip) chip.textContent = `Resueltos: ${ovaState.algSolved} / 4`;
+        showFeedback('alg-feedback', 'ok', `¡Excelente! Resultado exacto: $${cFmt({ re: expRe, im: expIm }, 0)}$.`);
+        persistState();
+      } else {
+        playTone('err');
+        if (op === 'mul') {
+          const signTrap = (uRe === a * c + b * d);
+          const extra = signTrap
+            ? `<strong>Detectamos el error clásico:</strong> sumaste $+bd$ en lugar de restar $-bd$ ($i^2 = -1$).<br>`
+            : '';
+          showFeedback('alg-feedback', 'err', `${extra}Desglose distributivo:<br>Parte real: $(${a})(${c}) - (${b})(${d}) = ${a * c} - (${b * d}) = ${expRe}$<br>Parte imaginaria: $(${a})(${d}) + (${b})(${c}) = ${a * d} + (${b * c}) = ${expIm}$`);
+        } else {
+          showFeedback('alg-feedback', 'err', `Revisa los signos: Parte real = ${expRe}, Parte imaginaria = ${expIm}.`);
+        }
+      }
+    }
+
+    /* ======================================================================
+       MÓDULO 2: ESCENA 4 (RUEDA CÍCLICA DE i Y JUEGO DE VELOCIDAD)
+       ====================================================================== */
+    function updateWheelFromExp(val) {
+      const n = Math.max(0, parseInt(val, 10) || 0);
+      const q = Math.floor(n / 4);
+      const r = n % 4;
+      const results = ['1', 'i', '-1', '-i'];
+      const bd = document.getElementById('wheel-breakdown');
+      if (bd) {
+        bd.innerHTML = `$${n} = 4 \\times ${q} + ${r} \\implies i^{${n}} = i^{${r}} = ${results[r]}$`;
+        renderMathIn(bd);
+      }
+      drawIWheel(r);
+    }
+
+    function drawIWheel(activeRem) {
+      const svg = document.getElementById('svg-i-wheel');
+      if (!svg) return;
+      const cPrimary = getCssToken('--primary');
+      const cSage = getCssToken('--tertiary');
+      const cAmber = getCssToken('--data-3');
+      const cOutline = getCssToken('--outline');
+      const cText = getCssToken('--on-surface');
+      const cMuted = getCssToken('--on-surface-variant');
+      const cBg = getCssToken('--surface-container');
+
+      const nodes = [
+        { r: 0, x: 250, y: 130, label: 'i⁰ = 1', sub: 'Residuo 0' },
+        { r: 1, x: 160, y: 40, label: 'i¹ = i', sub: 'Residuo 1' },
+        { r: 2, x: 70, y: 130, label: 'i² = -1', sub: 'Residuo 2' },
+        { r: 3, x: 160, y: 220, label: 'i³ = -i', sub: 'Residuo 3' }
+      ];
+
+      let html = `
+        <circle cx="160" cy="130" r="90" fill="none" stroke="${cOutline}" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <text x="160" y="126" text-anchor="middle" fill="${cMuted}" font-family="Geist Mono, monospace" font-size="11">CICLO MOD 4</text>
+        <text x="160" y="144" text-anchor="middle" fill="${cAmber}" font-family="Geist Mono, monospace" font-size="13" font-weight="600">× i (90°)</text>
+      `;
+
+      for (const nd of nodes) {
+        const active = nd.r === activeRem;
+        html += `
+          <g style="cursor: pointer;" onclick="updateWheelFromExp(${nd.r})">
+            <circle cx="${nd.x}" cy="${nd.y}" r="30" fill="${active ? cSage : cBg}" fill-opacity="${active ? '0.2' : '1'}" stroke="${active ? cSage : cPrimary}" stroke-width="${active ? '2.5' : '1.4'}"/>
+            <text x="${nd.x}" y="${nd.y - 2}" text-anchor="middle" fill="${active ? cSage : cText}" font-family="Geist Mono, monospace" font-size="13" font-weight="600">${nd.label}</text>
+            <text x="${nd.x}" y="${nd.y + 14}" text-anchor="middle" fill="${cMuted}" font-family="Geist Mono, monospace" font-size="9">${nd.sub}</text>
+          </g>
+        `;
+      }
+      svg.innerHTML = html;
+    }
+
+    const SPEED_QUESTIONS = [2607, 105, 402, 88, 1999];
+    let speedIdx = 0;
+    let speedScore = 0;
+    let speedTimer = null;
+    let speedSeconds = 10;
+    let speedUntimed = false;
+
+    function toggleSpeedUntimed() {
+      speedUntimed = !speedUntimed;
+      const btn = document.getElementById('btn-speed-untimed');
+      const chip = document.getElementById('speed-timer-chip');
+      if (btn) btn.classList.toggle('btn-active', speedUntimed);
+      if (chip) chip.textContent = speedUntimed ? 'Sin límite (DUA)' : `Tiempo: ${speedSeconds}s`;
+    }
+
+    function startSpeedGame() {
+      speedIdx = 0;
+      speedScore = 0;
+      const idle = document.getElementById('speed-idle');
+      const active = document.getElementById('speed-active');
+      const fb = document.getElementById('speed-feedback');
+      if (idle) idle.style.display = 'none';
+      if (active) active.style.display = 'grid';
+      if (fb) fb.className = 'feedback-box';
+      loadSpeedQuestion();
+    }
+
+    function loadSpeedQuestion() {
+      if (speedTimer) clearInterval(speedTimer);
+      if (speedIdx >= SPEED_QUESTIONS.length) {
+        finishSpeedGame();
+        return;
+      }
+      const exp = SPEED_QUESTIONS[speedIdx];
+      const qNum = document.getElementById('speed-q-num');
+      const qTxt = document.getElementById('speed-q-text');
+      const sc = document.getElementById('speed-score-live');
+      if (qNum) qNum.textContent = `Pregunta ${speedIdx + 1} de ${SPEED_QUESTIONS.length}`;
+      if (qTxt) qTxt.textContent = `i^${exp} = ?`;
+      if (sc) sc.textContent = `Aciertos: ${speedScore}`;
+
+      speedSeconds = 10;
+      const tChip = document.getElementById('speed-timer-chip');
+      if (tChip) tChip.textContent = speedUntimed ? 'Sin límite (DUA)' : `Tiempo: ${speedSeconds}s`;
+      if (!speedUntimed) {
+        speedTimer = setInterval(() => {
+          speedSeconds -= 1;
+          if (tChip) tChip.textContent = `Tiempo: ${speedSeconds}s`;
+          if (speedSeconds <= 0) {
+            clearInterval(speedTimer);
+            answerSpeed('TIMEOUT');
+          }
+        }, 1000);
+      }
+    }
+
+    function answerSpeed(choice) {
+      if (speedTimer) clearInterval(speedTimer);
+      const exp = SPEED_QUESTIONS[speedIdx];
+      const rem = exp % 4;
+      const exact = ['1', 'i', '-1', '-i'][rem];
+      updateWheelFromExp(exp);
+      if (choice === exact) {
+        speedScore += 1;
+        playTone('ok');
+        showFeedback('speed-feedback', 'ok', `¡Correcto! $i^{${exp}} = i^{${rem}} = ${exact}$.`);
+      } else {
+        playTone('err');
+        const msg = choice === 'TIMEOUT' ? 'Se agotó el tiempo.' : `Elegiste ${choice}.`;
+        showFeedback('speed-feedback', 'err', `${msg} Como $${exp} \\bmod 4 = ${rem}$, la respuesta correcta es $${exact}$.`);
+      }
+      speedIdx += 1;
+      setTimeout(loadSpeedQuestion, 900);
+    }
+
+    function finishSpeedGame() {
+      const idle = document.getElementById('speed-idle');
+      const active = document.getElementById('speed-active');
+      if (idle) idle.style.display = 'grid';
+      if (active) active.style.display = 'none';
+      ovaState.speedDone = true;
+      ovaState.speedBest = Math.max(ovaState.speedBest, speedScore);
+      showFeedback('speed-feedback', speedScore >= 4 ? 'ok' : 'info', `Prueba completada: obtuviste ${speedScore} / ${SPEED_QUESTIONS.length} aciertos en potencias de $i$.`);
+      persistState();
+    }
+
+    /* ======================================================================
+       MÓDULO 2: ESCENA 5 (PASOS ENLAZADOS Y DIVISIÓN POR CONJUGADO)
+       ====================================================================== */
+    const DIV_STEPS_CORRECT = [
+      { id: 1, text: '1. Identificar el conjugado del denominador: $\\overline{1 - 4i} = 1 + 4i$.' },
+      { id: 2, text: '2. Multiplicar numerador y denominador por el conjugado: $\\dfrac{(3+2i)(1+4i)}{(1-4i)(1+4i)}$.' },
+      { id: 3, text: '3. Simplificar el denominador real: $1^2 + (-4)^2 = 1 + 16 = 17$.' },
+      { id: 4, text: '4. Expandir el numerador usando $i^2 = -1$: $(3 - 8) + (12 + 2)i = -5 + 14i$, resultando $\\dfrac{-5 + 14i}{17}$.' }
+    ];
+    let currentDivOrder = [2, 0, 3, 1];
+
+    function renderDivSteps() {
+      const list = document.getElementById('div-steps-list');
+      if (!list) return;
+      list.innerHTML = currentDivOrder.map((origIdx, pos) => {
+        const st = DIV_STEPS_CORRECT[origIdx];
+        return `
+          <div class="step-item">
+            <span style="font-size: 0.92rem;">${st.text.replace(/^\d+\.\s*/, '')}</span>
+            <div class="step-controls">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="moveDivStep(${pos}, -1)" ${pos === 0 ? 'disabled' : ''} aria-label="Subir paso">↑</button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="moveDivStep(${pos}, 1)" ${pos === 3 ? 'disabled' : ''} aria-label="Bajar paso">↓</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      renderMathIn(list);
+    }
+
+    function moveDivStep(pos, dir) {
+      const target = pos + dir;
+      if (target < 0 || target >= currentDivOrder.length) return;
+      const tmp = currentDivOrder[pos];
+      currentDivOrder[pos] = currentDivOrder[target];
+      currentDivOrder[target] = tmp;
+      renderDivSteps();
+    }
+
+    function shuffleDivSteps() {
+      currentDivOrder = [2, 0, 3, 1];
+      renderDivSteps();
+      const fb = document.getElementById('div-order-feedback');
+      if (fb) fb.className = 'feedback-box';
+    }
+
+    function checkDivStepsOrder() {
+      const ok = currentDivOrder.every((val, idx) => val === idx);
+      if (ok) {
+        ovaState.divOrderDone = true;
+        playTone('ok');
+        showFeedback('div-order-feedback', 'ok', '¡Secuencia lógica perfecta! Identificaste primero el conjugado, luego racionalizaste multiplicando numerador y denominador, y finalmente simplificaste.');
+        persistState();
+      } else {
+        playTone('err');
+        showFeedback('div-order-feedback', 'err', 'El orden lógico aún no coincide. Primero se identifica el conjugado del denominador, luego se multiplica arriba y abajo por él.');
+      }
+    }
+
+    const DIV_PROBLEMS = [
+      { a: 5, b: 1, c: 1, d: -2 },
+      { a: 4, b: 3, c: 2, d: 1 },
+      { a: 2, b: -3, c: 1, d: 3 }
+    ];
+    let curDivIdx = 0;
+
+    function loadDivProblem() {
+      const p = DIV_PROBLEMS[curDivIdx];
+      const disp = document.getElementById('div-problem-display');
+      if (disp) disp.textContent = `(${cFmt({ re: p.a, im: p.b }, 0)}) ÷ (${cFmt({ re: p.c, im: p.d }, 0)})`;
+      ['div-conj-input', 'div-denom-input', 'div-num-re', 'div-num-im'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+    }
+
+    function newDivPractice() {
+      curDivIdx = (curDivIdx + 1) % DIV_PROBLEMS.length;
+      loadDivProblem();
+      const fb = document.getElementById('div-practice-feedback');
+      if (fb) fb.className = 'feedback-box';
+    }
+
+    function checkDivPractice() {
+      const p = DIV_PROBLEMS[curDivIdx];
+      const expConj = { re: p.c, im: -p.d };
+      const expDen = p.c * p.c + p.d * p.d;
+      const expNum = cMul({ re: p.a, im: p.b }, expConj);
+
+      const uConj = parseComplex((document.getElementById('div-conj-input') || {}).value);
+      const uDen = parseFloat((document.getElementById('div-denom-input') || {}).value);
+      const uNumRe = parseFloat((document.getElementById('div-num-re') || {}).value);
+      const uNumIm = parseFloat((document.getElementById('div-num-im') || {}).value);
+
+      if (!uConj || Number.isNaN(uDen) || Number.isNaN(uNumRe) || Number.isNaN(uNumIm)) {
+        showFeedback('div-practice-feedback', 'err', 'Completa el conjugado, el denominador real y el numerador complejo antes de comprobar.');
+        return;
+      }
+
+      const okConj = cEq(uConj, expConj, 0.01);
+      const okDen = Math.abs(uDen - expDen) < 0.01;
+      const okNum = uNumRe === expNum.re && uNumIm === expNum.im;
+
+      if (okConj && okDen && okNum) {
+        ovaState.divSolved += 1;
+        playTone('ok');
+        const chip = document.getElementById('div-count-chip');
+        if (chip) chip.textContent = `Divisiones resueltas: ${ovaState.divSolved} / 2`;
+        showFeedback('div-practice-feedback', 'ok', `¡División correcta! $\\dfrac{${cFmt(expNum, 0)}}{${expDen}}$.`);
+        persistState();
+      } else {
+        playTone('err');
+        let msgs = [];
+        if (!okConj) msgs.push(`El conjugado de $${cFmt({ re: p.c, im: p.d }, 0)}$ es $${cFmt(expConj, 0)}$.`);
+        if (!okDen) msgs.push(`El denominador real es $${p.c}^2 + (${p.d})^2 = ${expDen}$.`);
+        if (!okNum) msgs.push(`El producto del numerador por el conjugado da $${cFmt(expNum, 0)}$.`);
+        showFeedback('div-practice-feedback', 'err', msgs.join('<br>'));
+      }
+    }
+
+    /* ======================================================================
+       MÓDULO 3: ESCENA 6 (MATRICES REALES)
+       ====================================================================== */
+    let rMatA = [[2, -1], [3, 4]];
+    let rMatB = [[1, 5], [-2, 2]];
+
+    function randomizeRealMatrices() {
+      const dim = parseInt((document.getElementById('rmat-dim') || {}).value || '2', 10);
+      const rnd = () => Math.floor(Math.random() * 7) - 3;
+      rMatA = Array.from({ length: dim }, () => Array.from({ length: dim }, rnd));
+      rMatB = Array.from({ length: dim }, () => Array.from({ length: dim }, rnd));
+      // Evitar singularidad por defecto en inversa
+      if (dim === 2 && rMatA[0][0] * rMatA[1][1] - rMatA[0][1] * rMatA[1][0] === 0) {
+        rMatA[0][0] += 1;
+      }
+      setupRealMatrixUI();
+    }
+
+    function setupRealMatrixUI() {
+      const op = (document.getElementById('rmat-op') || {}).value || 'mul';
+      const dim = parseInt((document.getElementById('rmat-dim') || {}).value || '2', 10);
+      if (rMatA.length !== dim) {
+        rMatA = dim === 2 ? [[2, -1], [3, 4]] : [[1, 2, 0], [-1, 1, 3], [2, 0, 1]];
+        rMatB = dim === 2 ? [[1, 3], [-2, 2]] : [[2, -1, 1], [0, 3, -2], [1, 1, 0]];
+      }
+      const kWrap = document.getElementById('rmat-k-wrap');
+      const bCont = document.getElementById('rmat-b-container');
+      if (kWrap) kWrap.style.display = op === 'scale' ? 'flex' : 'none';
+      if (bCont) bCont.style.display = (op === 'mul' || op === 'add') ? 'block' : 'none';
+
+      renderRealGrid('rmat-a-grid', rMatA, 'A');
+      renderRealGrid('rmat-b-grid', rMatB, 'B');
+      renderRealResultInputs(op, dim);
+      const fb = document.getElementById('rmat-feedback');
+      if (fb) fb.className = 'feedback-box';
+    }
+
+    function renderRealGrid(elId, mat, tag) {
+      const grid = document.getElementById(elId);
+      if (!grid) return;
+      const dim = mat.length;
+      grid.style.gridTemplateColumns = `repeat(${dim}, minmax(0, 1fr))`;
+      grid.innerHTML = mat.map((row, i) =>
+        row.map((val, j) =>
+          `<input type="number" class="matrix-cell-input" id="${elId}-${i}-${j}" value="${val}" aria-label="Matriz ${tag} fila ${i + 1} columna ${j + 1}" oninput="updateRealCell('${tag}', ${i}, ${j}, this.value)">`
+        ).join('')
+      ).join('');
+    }
+
+    function updateRealCell(tag, i, j, val) {
+      const num = parseFloat(val) || 0;
+      if (tag === 'A') rMatA[i][j] = num;
+      else rMatB[i][j] = num;
+    }
+
+    function renderRealResultInputs(op, dim) {
+      const detWrap = document.getElementById('rmat-det-wrap');
+      const area = document.getElementById('rmat-result-area');
+      if (!area) return;
+      if (op === 'det') {
+        if (detWrap) detWrap.style.display = 'flex';
+        const detIn = document.getElementById('rmat-res-det');
+        if (detIn) detIn.value = '';
+        area.style.display = 'none';
+        area.innerHTML = '';
+      } else {
+        if (detWrap) detWrap.style.display = 'none';
+        area.style.display = 'block';
+        area.innerHTML = `
+          <div class="matrix-wrap">
+            <div class="matrix-bracket-l"></div>
+            <div class="matrix-cells" style="grid-template-columns: repeat(${dim}, minmax(0, 1fr));">
+              ${Array.from({ length: dim }, (_, i) =>
+                Array.from({ length: dim }, (__, j) =>
+                  `<input type="text" class="matrix-cell-input" id="rmat-res-${i}-${j}" placeholder="c${i + 1}${j + 1}" onfocus="highlightRealTrace(${i}, ${j})" aria-label="Resultado fila ${i + 1} columna ${j + 1}">`
+                ).join('')
+              ).join('')}
+            </div>
+            <div class="matrix-bracket-r"></div>
+          </div>
+        `;
+      }
+    }
+
+    function highlightRealTrace(ri, rj) {
+      const op = (document.getElementById('rmat-op') || {}).value || 'mul';
+      const dim = rMatA.length;
+      document.querySelectorAll('#rmat-a-grid .matrix-cell-input, #rmat-b-grid .matrix-cell-input').forEach((el) => {
+        el.classList.remove('hl-row', 'hl-col');
+      });
+      const box = document.getElementById('rmat-trace-box');
+      if (op === 'mul') {
+        for (let k = 0; k < dim; k++) {
+          const aEl = document.getElementById(`rmat-a-grid-${ri}-${k}`);
+          const bEl = document.getElementById(`rmat-b-grid-${k}-${rj}`);
+          if (aEl) aEl.classList.add('hl-row');
+          if (bEl) bEl.classList.add('hl-col');
+        }
+        const terms = Array.from({ length: dim }, (_, k) => `(${rMatA[ri][k]})·(${rMatB[k][rj]})`).join(' + ');
+        if (box) box.textContent = `Celda (${ri + 1}, ${rj + 1}) = Fila ${ri + 1} de A · Columna ${rj + 1} de B = ${terms}`;
+      } else if (op === 'add') {
+        const aEl = document.getElementById(`rmat-a-grid-${ri}-${rj}`);
+        const bEl = document.getElementById(`rmat-b-grid-${ri}-${rj}`);
+        if (aEl) aEl.classList.add('hl-row');
+        if (bEl) bEl.classList.add('hl-col');
+        if (box) box.textContent = `Celda (${ri + 1}, ${rj + 1}) = A[${ri + 1},${rj + 1}] + B[${ri + 1},${rj + 1}] = ${rMatA[ri][rj]} + ${rMatB[ri][rj]}`;
+      } else if (op === 'scale') {
+        const k = parseFloat((document.getElementById('rmat-k') || {}).value || '1');
+        const aEl = document.getElementById(`rmat-a-grid-${ri}-${rj}`);
+        if (aEl) aEl.classList.add('hl-row');
+        if (box) box.textContent = `Celda (${ri + 1}, ${rj + 1}) = ${k} · (${rMatA[ri][rj]})`;
+      } else if (op === 'pow') {
+        for (let k = 0; k < dim; k++) {
+          const aEl = document.getElementById(`rmat-a-grid-${ri}-${k}`);
+          if (aEl) aEl.classList.add('hl-row');
+        }
+        if (box) box.textContent = `A²[${ri + 1},${rj + 1}] = Fila ${ri + 1} de A · Columna ${rj + 1} de A`;
+      } else if (op === 'det') {
+        if (box) box.textContent = dim === 2 ? 'det(A) = a₁₁·a₂₂ − a₁₂·a₂₁' : 'det(A) por expansión de cofactores de la primera fila.';
+      } else if (op === 'inv') {
+        if (box) box.textContent = 'A⁻¹ = (1 / det(A)) · adj(A). Verifica primero que det(A) ≠ 0.';
+      }
+    }
+
+    function updateRealMatrixHint() {
+      highlightRealTrace(0, 0);
+    }
+
+    function realDet(M) {
+      if (M.length === 2) return M[0][0] * M[1][1] - M[0][1] * M[1][0];
+      return (
+        M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1]) -
+        M[0][1] * (M[1][0] * M[2][2] - M[1][2] * M[2][0]) +
+        M[0][2] * (M[1][0] * M[2][1] - M[1][1] * M[2][0])
+      );
+    }
+
+    function computeRealExpected() {
+      const op = (document.getElementById('rmat-op') || {}).value || 'mul';
+      const dim = rMatA.length;
+      if (op === 'det') return { scalar: realDet(rMatA) };
+      if (op === 'add') return { mat: rMatA.map((r, i) => r.map((v, j) => v + rMatB[i][j])) };
+      if (op === 'scale') {
+        const k = parseFloat((document.getElementById('rmat-k') || {}).value || '1');
+        return { mat: rMatA.map((r) => r.map((v) => v * k)) };
+      }
+      if (op === 'mul' || op === 'pow') {
+        const B = op === 'pow' ? rMatA : rMatB;
+        const res = Array.from({ length: dim }, () => Array(dim).fill(0));
+        for (let i = 0; i < dim; i++) {
+          for (let j = 0; j < dim; j++) {
+            for (let k = 0; k < dim; k++) res[i][j] += rMatA[i][k] * B[k][j];
+          }
+        }
+        return { mat: res };
+      }
+      if (op === 'inv') {
+        const d = realDet(rMatA);
+        if (Math.abs(d) < 1e-8) return { error: 'La matriz A es singular (det(A) = 0) y no tiene inversa. Cambia alguna componente para continuar.' };
+        if (dim === 2) {
+          return {
+            mat: [
+              [rMatA[1][1] / d, -rMatA[0][1] / d],
+              [-rMatA[1][0] / d, rMatA[0][0] / d]
+            ]
+          };
+        }
+        const adj = Array.from({ length: 3 }, () => Array(3).fill(0));
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 3; j++) {
+            const sub = [];
+            for (let r = 0; r < 3; r++) {
+              if (r === i) continue;
+              const row = [];
+              for (let c = 0; c < 3; c++) if (c !== j) row.push(rMatA[r][c]);
+              sub.push(row);
+            }
+            const sign = (i + j) % 2 === 0 ? 1 : -1;
+            adj[j][i] = (sign * (sub[0][0] * sub[1][1] - sub[0][1] * sub[1][0])) / d;
+          }
+        }
+        return { mat: adj };
+      }
+      return {};
+    }
+
+    function verifyRealMatrix() {
+      const exp = computeRealExpected();
+      if (exp.error) {
+        playTone('err');
+        showFeedback('rmat-feedback', 'err', exp.error);
+        return;
+      }
+      if (exp.scalar !== undefined) {
+        const u = evalSimpleScalar((document.getElementById('rmat-res-det') || {}).value);
+        if (Number.isNaN(u)) {
+          showFeedback('rmat-feedback', 'err', 'Ingresa un número válido para el determinante.');
+          return;
+        }
+        if (Math.abs(u - exp.scalar) <= 0.05) {
+          ovaState.rmatSolved += 1;
+          playTone('ok');
+          showFeedback('rmat-feedback', 'ok', `¡Determinante correcto! $\\det(A) = ${Number(exp.scalar.toFixed(3))}$.`);
+          persistState();
+        } else {
+          playTone('err');
+          showFeedback('rmat-feedback', 'err', `Valor incorrecto (${u}). Recuerda restar el producto de la diagonal secundaria.`);
+        }
+        return;
+      }
+
+      const dim = exp.mat.length;
+      let allOk = true;
+      let badCells = [];
+      for (let i = 0; i < dim; i++) {
+        for (let j = 0; j < dim; j++) {
+          const el = document.getElementById(`rmat-res-${i}-${j}`);
+          if (!el) continue;
+          el.classList.remove('cell-ok', 'cell-err');
+          const u = evalSimpleScalar(el.value);
+          if (Number.isNaN(u) || Math.abs(u - exp.mat[i][j]) > 0.05) {
+            allOk = false;
+            el.classList.add('cell-err');
+            badCells.push(`(${i + 1}, ${j + 1})`);
+          } else {
+            el.classList.add('cell-ok');
+          }
+        }
+      }
+      if (allOk) {
+        ovaState.rmatSolved += 1;
+        playTone('ok');
+        showFeedback('rmat-feedback', 'ok', '¡Todas las entradas de la matriz resultado son correctas!');
+        persistState();
+      } else {
+        playTone('err');
+        showFeedback('rmat-feedback', 'err', `Revisa las celdas marcadas en rojo: ${badCells.join(', ')}. Haz clic en ellas para ver el trazado fila–columna.`);
+      }
+    }
+
+    function revealRealMatrix() {
+      const exp = computeRealExpected();
+      if (exp.error) {
+        showFeedback('rmat-feedback', 'err', exp.error);
+        return;
+      }
+      if (exp.scalar !== undefined) {
+        const el = document.getElementById('rmat-res-det');
+        if (el) el.value = Number(exp.scalar.toFixed(3));
+        showFeedback('rmat-feedback', 'info', `Solución: $\\det(A) = ${Number(exp.scalar.toFixed(3))}$.`);
+        return;
+      }
+      exp.mat.forEach((row, i) => row.forEach((val, j) => {
+        const el = document.getElementById(`rmat-res-${i}-${j}`);
+        if (el) {
+          el.value = Number(val.toFixed(2));
+          el.classList.remove('cell-err');
+        }
+      }));
+      showFeedback('rmat-feedback', 'info', 'Se completó la matriz solución para que contrastes con tus cálculos.');
+    }
+
+    /* ======================================================================
+       MÓDULO 3: ESCENA 7 (MATRICES Y DETERMINANTES COMPLEJOS)
+       ====================================================================== */
+    let cMatA = [[{ re: 0, im: -1 }, { re: 1, im: 0 }], [{ re: 2, im: 1 }, { re: 0, im: 2 }]];
+    let cMatB = [[{ re: 1, im: 1 }, { re: 0, im: -1 }], [{ re: 1, im: 0 }, { re: 2, im: -1 }]];
+
+    function loadComplexMatrixPreset(kind) {
+      const dim = parseInt((document.getElementById('cmat-dim') || {}).value || '2', 10);
+      if (kind === 'singular') {
+        if (dim === 2) {
+          cMatA = [[{ re: 1, im: 1 }, { re: 2, im: 2 }], [{ re: 0, im: 1 }, { re: 0, im: 2 }]];
+        } else {
+          cMatA = [
+            [{ re: 1, im: 0 }, { re: 0, im: 1 }, { re: 1, im: 1 }],
+            [{ re: 2, im: 0 }, { re: 0, im: 2 }, { re: 2, im: 2 }],
+            [{ re: 0, im: 1 }, { re: 1, im: 0 }, { re: 1, im: 1 }]
+          ];
+        }
+      } else {
+        if (dim === 2) {
+          cMatA = [[{ re: 0, im: -1 }, { re: 1, im: 0 }], [{ re: 2, im: 1 }, { re: 0, im: 2 }]];
+          cMatB = [[{ re: 1, im: 1 }, { re: 0, im: -1 }], [{ re: 1, im: 0 }, { re: 2, im: -1 }]];
+        } else {
+          cMatA = [
+            [{ re: 1, im: 1 }, { re: 0, im: -1 }, { re: 2, im: 0 }],
+            [{ re: 0, im: 1 }, { re: 1, im: 0 }, { re: 0, im: -1 }],
+            [{ re: 1, im: 0 }, { re: 2, im: 1 }, { re: 0, im: 2 }]
+          ];
+          cMatB = [
+            [{ re: 1, im: 0 }, { re: 0, im: 1 }, { re: 0, im: 0 }],
+            [{ re: 0, im: -1 }, { re: 2, im: 0 }, { re: 1, im: 1 }],
+            [{ re: 0, im: 0 }, { re: 1, im: -1 }, { re: 1, im: 0 }]
+          ];
+        }
+      }
+      setupComplexMatrixUI();
+    }
+
+    function setupComplexMatrixUI() {
+      const op = (document.getElementById('cmat-op') || {}).value || 'mul';
+      const dim = parseInt((document.getElementById('cmat-dim') || {}).value || '2', 10);
+      if (cMatA.length !== dim) {
+        loadComplexMatrixPreset('quantum');
+        return;
+      }
+      const zWrap = document.getElementById('cmat-z-wrap');
+      const bCont = document.getElementById('cmat-b-container');
+      if (zWrap) zWrap.style.display = op === 'scale' ? 'flex' : 'none';
+      if (bCont) bCont.style.display = (op === 'mul' || op === 'add') ? 'block' : 'none';
+
+      renderComplexGrid('cmat-a-grid', cMatA, 'A');
+      renderComplexGrid('cmat-b-grid', cMatB, 'B');
+      renderComplexResultInputs(op, dim);
+      computeComplexMatrixRef();
+      const sb = document.getElementById('cmat-steps-box');
+      if (sb) sb.style.display = 'none';
+      const fb = document.getElementById('cmat-feedback');
+      if (fb) fb.className = 'feedback-box';
+    }
+
+    function renderComplexGrid(elId, mat, tag) {
+      const grid = document.getElementById(elId);
+      if (!grid) return;
+      const dim = mat.length;
+      grid.style.gridTemplateColumns = `repeat(${dim}, minmax(0, 1fr))`;
+      grid.innerHTML = mat.map((row, i) =>
+        row.map((val, j) =>
+          `<input type="text" class="matrix-cell-input" id="${elId}-${i}-${j}" value="${cFmt(val, 2)}" aria-label="Matriz compleja ${tag} fila ${i + 1} columna ${j + 1}" onchange="updateComplexCell('${tag}', ${i}, ${j}, this.value)">`
+        ).join('')
+      ).join('');
+    }
+
+    function updateComplexCell(tag, i, j, raw) {
+      const parsed = parseComplex(raw);
+      if (!parsed) {
+        showFeedback('cmat-impossibility-box', 'err', `Entrada no válida "${raw}" en (${i + 1}, ${j + 1}). Usa formato a + bi (ej: 2 - 3i, -i, 4).`);
+        return;
+      }
+      if (tag === 'A') cMatA[i][j] = parsed;
+      else cMatB[i][j] = parsed;
+      computeComplexMatrixRef();
+    }
+
+    function renderComplexResultInputs(op, dim) {
+      const detWrap = document.getElementById('cmat-det-wrap');
+      const area = document.getElementById('cmat-result-area');
+      if (!area) return;
+      if (op === 'det') {
+        if (detWrap) detWrap.style.display = 'flex';
+        const detIn = document.getElementById('cmat-res-det');
+        if (detIn) detIn.value = '';
+        area.style.display = 'none';
+        area.innerHTML = '';
+      } else {
+        if (detWrap) detWrap.style.display = 'none';
+        area.style.display = 'block';
+        area.innerHTML = `
+          <div class="matrix-wrap">
+            <div class="matrix-bracket-l"></div>
+            <div class="matrix-cells" style="grid-template-columns: repeat(${dim}, minmax(0, 1fr));">
+              ${Array.from({ length: dim }, (_, i) =>
+                Array.from({ length: dim }, (__, j) =>
+                  `<input type="text" class="matrix-cell-input" id="cmat-res-${i}-${j}" placeholder="a+bi" aria-label="Resultado complejo fila ${i + 1} columna ${j + 1}">`
+                ).join('')
+              ).join('')}
+            </div>
+            <div class="matrix-bracket-r"></div>
+          </div>
+        `;
+      }
+    }
+
+    function complexDet(M) {
+      if (M.length === 2) {
+        return cSub(cMul(M[0][0], M[1][1]), cMul(M[0][1], M[1][0]));
+      }
+      const m00 = cSub(cMul(M[1][1], M[2][2]), cMul(M[1][2], M[2][1]));
+      const m01 = cSub(cMul(M[1][0], M[2][2]), cMul(M[1][2], M[2][0]));
+      const m02 = cSub(cMul(M[1][0], M[2][1]), cMul(M[1][1], M[2][0]));
+      return cAdd(cSub(cMul(M[0][0], m00), cMul(M[0][1], m01)), cMul(M[0][2], m02));
+    }
+
+    function computeComplexExpected() {
+      const op = (document.getElementById('cmat-op') || {}).value || 'mul';
+      const dim = cMatA.length;
+      if (op === 'det') return { scalar: complexDet(cMatA) };
+      if (op === 'add') return { mat: cMatA.map((r, i) => r.map((v, j) => cAdd(v, cMatB[i][j]))) };
+      if (op === 'scale') {
+        const z = parseComplex((document.getElementById('cmat-z') || {}).value) || { re: 1, im: 0 };
+        return { mat: cMatA.map((r) => r.map((v) => cMul(z, v))) };
+      }
+      if (op === 'mul' || op === 'pow') {
+        const B = op === 'pow' ? cMatA : cMatB;
+        const res = Array.from({ length: dim }, () => Array.from({ length: dim }, () => ({ re: 0, im: 0 })));
+        for (let i = 0; i < dim; i++) {
+          for (let j = 0; j < dim; j++) {
+            for (let k = 0; k < dim; k++) {
+              res[i][j] = cAdd(res[i][j], cMul(cMatA[i][k], B[k][j]));
+            }
+          }
+        }
+        return { mat: res };
+      }
+      if (op === 'inv') {
+        const d = complexDet(cMatA);
+        if (cAbs(d) < 1e-7) {
+          return {
+            error: `Operación imposible: $\\det(A) = 0$. Cuando el determinante complejo es nulo, la matriz es singular y $A^{-1}$ no existe. Edita alguna componente de $A$ (por ejemplo $A_{1,1}$) para hacer $\\det(A) \\neq 0$.`
+          };
+        }
+        if (dim === 2) {
+          return {
+            mat: [
+              [cDiv(cMatA[1][1], d), cDiv({ re: -cMatA[0][1].re, im: -cMatA[0][1].im }, d)],
+              [cDiv({ re: -cMatA[1][0].re, im: -cMatA[1][0].im }, d), cDiv(cMatA[0][0], d)]
+            ]
+          };
+        }
+        const adj = Array.from({ length: 3 }, () => Array.from({ length: 3 }, () => ({ re: 0, im: 0 })));
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 3; j++) {
+            const sub = [];
+            for (let r = 0; r < 3; r++) {
+              if (r === i) continue;
+              const row = [];
+              for (let c = 0; c < 3; c++) if (c !== j) row.push(cMatA[r][c]);
+              sub.push(row);
+            }
+            const cof = cSub(cMul(sub[0][0], sub[1][1]), cMul(sub[0][1], sub[1][0]));
+            const signed = (i + j) % 2 === 0 ? cof : { re: -cof.re, im: -cof.im };
+            adj[j][i] = cDiv(signed, d);
+          }
+        }
+        return { mat: adj };
+      }
+      return {};
+    }
+
+    function computeComplexMatrixRef() {
+      const exp = computeComplexExpected();
+      const box = document.getElementById('cmat-impossibility-box');
+      if (!box) return;
+      if (exp.error) {
+        showFeedback('cmat-impossibility-box', 'err', exp.error);
+      } else {
+        box.className = 'feedback-box';
+      }
+    }
+
+    function verifyComplexMatrix() {
+      const exp = computeComplexExpected();
+      if (exp.error) {
+        playTone('err');
+        showFeedback('cmat-feedback', 'err', exp.error);
+        return;
+      }
+      if (exp.scalar) {
+        const u = parseComplex((document.getElementById('cmat-res-det') || {}).value);
+        if (!u) {
+          showFeedback('cmat-feedback', 'err', 'Formato inválido en el determinante. Escribe por ejemplo -3 + 4i.');
+          return;
+        }
+        if (cEq(u, exp.scalar, 0.05)) {
+          ovaState.cmatSolved += 1;
+          playTone('ok');
+          const chip = document.getElementById('cmat-done-chip');
+          if (chip) chip.textContent = `Verificadas: ${ovaState.cmatSolved} / 2`;
+          showFeedback('cmat-feedback', 'ok', `¡Determinante complejo correcto! $\\det(A) = ${cFmt(exp.scalar, 2)}$.`);
+          persistState();
+        } else {
+          playTone('err');
+          showFeedback('cmat-feedback', 'err', `Tu valor (${cFmt(u, 2)}) no coincide. Verifica los signos de $i^2 = -1$ al multiplicar las diagonales.`);
+        }
+        return;
+      }
+
+      const dim = exp.mat.length;
+      let allOk = true;
+      let bad = [];
+      for (let i = 0; i < dim; i++) {
+        for (let j = 0; j < dim; j++) {
+          const el = document.getElementById(`cmat-res-${i}-${j}`);
+          if (!el) continue;
+          el.classList.remove('cell-ok', 'cell-err');
+          const u = parseComplex(el.value);
+          if (!u || !cEq(u, exp.mat[i][j], 0.06)) {
+            allOk = false;
+            el.classList.add('cell-err');
+            bad.push(`(${i + 1}, ${j + 1})`);
+          } else {
+            el.classList.add('cell-ok');
+          }
+        }
+      }
+      if (allOk) {
+        ovaState.cmatSolved += 1;
+        playTone('ok');
+        const chip = document.getElementById('cmat-done-chip');
+        if (chip) chip.textContent = `Verificadas: ${ovaState.cmatSolved} / 2`;
+        showFeedback('cmat-feedback', 'ok', '¡Matriz compleja verificada con éxito!');
+        persistState();
+      } else {
+        playTone('err');
+        showFeedback('cmat-feedback', 'err', `Revisa las entradas marcadas en rojo: ${bad.join(', ')}. Pulsa "Animar paso a paso" si deseas revisar los productos complejos.`);
+      }
+    }
+
+    function animateComplexMatrixSteps() {
+      const exp = computeComplexExpected();
+      const sb = document.getElementById('cmat-steps-box');
+      if (!sb) return;
+      if (exp.error) {
+        sb.style.display = 'none';
+        showFeedback('cmat-feedback', 'err', exp.error);
+        return;
+      }
+      const op = (document.getElementById('cmat-op') || {}).value || 'mul';
+      let lines = [];
+      if (op === 'det' && cMatA.length === 2) {
+        const d1 = cMul(cMatA[0][0], cMatA[1][1]);
+        const d2 = cMul(cMatA[0][1], cMatA[1][0]);
+        lines = [
+          `Paso 1 · Diagonal principal: (${cFmt(cMatA[0][0])})·(${cFmt(cMatA[1][1])}) = ${cFmt(d1)}`,
+          `Paso 2 · Diagonal secundaria: (${cFmt(cMatA[0][1])})·(${cFmt(cMatA[1][0])}) = ${cFmt(d2)}`,
+          `Paso 3 · det(A) = (${cFmt(d1)}) − (${cFmt(d2)}) = ${cFmt(exp.scalar)}`
+        ];
+      } else if (op === 'det') {
+        lines = [`Expansión por cofactores de fila 1: det(A) = ${cFmt(exp.scalar)}`];
+      } else {
+        const dim = exp.mat.length;
+        for (let i = 0; i < dim; i++) {
+          lines.push(`Fila ${i + 1}: [ ${exp.mat[i].map((c) => cFmt(c, 2)).join('  |  ')} ]`);
+        }
+        if (op === 'mul' || op === 'pow') {
+          const B = op === 'pow' ? cMatA : cMatB;
+          const t0 = cMul(cMatA[0][0], B[0][0]);
+          const t1 = cMul(cMatA[0][1], B[1][0]);
+          lines.unshift(`Ejemplo celda (1,1): (${cFmt(cMatA[0][0])})(${cFmt(B[0][0])}) + (${cFmt(cMatA[0][1])})(${cFmt(B[1][0])}) = (${cFmt(t0)}) + (${cFmt(t1)}) = ${cFmt(exp.mat[0][0])}`);
+        }
+      }
+
+      sb.style.display = 'block';
+      sb.innerHTML = '';
+      lines.forEach((ln, idx) => {
+        setTimeout(() => {
+          const div = document.createElement('div');
+          div.style.padding = '4px 0';
+          div.textContent = ln;
+          sb.appendChild(div);
+        }, idx * 240);
+      });
+    }
+
+    /* ======================================================================
+       MÓDULO 4: ESCENA 8 (ESFERA DE BLOCH 3D) Y ESCENA 9 (COMPUERTAS)
+       ====================================================================== */
+    let blochTheta = 60;
+    let blochPhi = 90;
+    let blochYaw = 0.65;
+    let blochPitch = 0.35;
+    let blochDragging = false;
+    let blochLastPtr = { x: 0, y: 0 };
+
+    function onBlochThetaSlider(val) {
+      blochTheta = parseFloat(val) || 0;
+      const num = document.getElementById('bloch-theta-num');
+      if (num) num.value = blochTheta;
+      ovaState.blochExplored = true;
+      updateBlochReadout();
+      drawBlochSphere('bloch-canvas', [getCurrentBlochVec()]);
+    }
+
+    function onBlochThetaNumber(val) {
+      blochTheta = Math.max(0, Math.min(180, parseFloat(val) || 0));
+      const sl = document.getElementById('bloch-theta-slider');
+      if (sl) sl.value = blochTheta;
+      ovaState.blochExplored = true;
+      updateBlochReadout();
+      drawBlochSphere('bloch-canvas', [getCurrentBlochVec()]);
+    }
+
+    function onBlochPhiSlider(val) {
+      blochPhi = parseFloat(val) || 0;
+      const num = document.getElementById('bloch-phi-num');
+      if (num) num.value = blochPhi;
+      ovaState.blochExplored = true;
+      updateBlochReadout();
+      drawBlochSphere('bloch-canvas', [getCurrentBlochVec()]);
+    }
+
+    function onBlochPhiNumber(val) {
+      blochPhi = Math.max(0, Math.min(360, parseFloat(val) || 0));
+      const sl = document.getElementById('bloch-phi-slider');
+      if (sl) sl.value = blochPhi;
+      ovaState.blochExplored = true;
+      updateBlochReadout();
+      drawBlochSphere('bloch-canvas', [getCurrentBlochVec()]);
+    }
+
+    function setBlochPreset(t, p) {
+      blochTheta = t;
+      blochPhi = p;
+      const tSl = document.getElementById('bloch-theta-slider');
+      const tNu = document.getElementById('bloch-theta-num');
+      const pSl = document.getElementById('bloch-phi-slider');
+      const pNu = document.getElementById('bloch-phi-num');
+      if (tSl) tSl.value = t;
+      if (tNu) tNu.value = t;
+      if (pSl) pSl.value = p;
+      if (pNu) pNu.value = p;
+      ovaState.blochExplored = true;
+      updateBlochReadout();
+      drawBlochSphere('bloch-canvas', [getCurrentBlochVec()]);
+      persistState();
+    }
+
+    function resetBlochCamera() {
+      blochYaw = 0.65;
+      blochPitch = 0.35;
+      drawBlochSphere('bloch-canvas', [getCurrentBlochVec()]);
+    }
+
+    function getCurrentBlochVec() {
+      const th = (blochTheta * Math.PI) / 180;
+      const ph = (blochPhi * Math.PI) / 180;
+      return {
+        x: Math.sin(th) * Math.cos(ph),
+        y: Math.sin(th) * Math.sin(ph),
+        z: Math.cos(th),
+        color: getCssToken('--primary'),
+        label: '|ψ⟩'
+      };
+    }
+
+    function updateBlochReadout() {
+      const th = (blochTheta * Math.PI) / 180;
+      const ph = (blochPhi * Math.PI) / 180;
+      const alpha = Math.cos(th / 2);
+      const betaRe = Math.sin(th / 2) * Math.cos(ph);
+      const betaIm = Math.sin(th / 2) * Math.sin(ph);
+      const p0 = alpha * alpha * 100;
+      const p1 = (betaRe * betaRe + betaIm * betaIm) * 100;
+      const x = Math.sin(th) * Math.cos(ph);
+      const y = Math.sin(th) * Math.sin(ph);
+      const z = Math.cos(th);
+
+      const aEl = document.getElementById('bloch-alpha-text');
+      const bEl = document.getElementById('bloch-beta-text');
+      const p0El = document.getElementById('bloch-p0');
+      const p1El = document.getElementById('bloch-p1');
+      const xyzEl = document.getElementById('bloch-xyz');
+
+      if (aEl) aEl.textContent = `α = ${alpha.toFixed(3)}`;
+      if (bEl) bEl.textContent = `β = ${cFmt({ re: betaRe, im: betaIm }, 3)}`;
+      if (p0El) p0El.textContent = `P(|0⟩) = |α|² = ${p0.toFixed(1)}%`;
+      if (p1El) p1El.textContent = `P(|1⟩) = |β|² = ${p1.toFixed(1)}%`;
+      if (xyzEl) xyzEl.textContent = `Coordenadas Bloch (x, y, z) = (${x.toFixed(2)}, ${y.toFixed(2)}, ${z.toFixed(2)})`;
+    }
+
+    function project3D(x, y, z, cx, cy, R) {
+      // Bloch: z arriba, x frente-izquierda, y frente-derecha
+      const cyaw = Math.cos(blochYaw), syaw = Math.sin(blochYaw);
+      const cp = Math.cos(blochPitch), sp = Math.sin(blochPitch);
+      // Rotar en plano XY (yaw)
+      const x1 = x * cyaw - y * syaw;
+      const y1 = x * syaw + y * cyaw;
+      // Rotar en pitch alrededor de X visual
+      const z2 = z * cp - y1 * sp;
+      const depth = z * sp + y1 * cp;
+      return { px: cx + x1 * R, py: cy - z2 * R, depth };
+    }
+
+    function drawBlochSphere(canvasId, vectors) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth || 360;
+      const h = canvas.clientHeight || 340;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+
+      const cx = w / 2;
+      const cy = h / 2;
+      const R = Math.min(w, h) * 0.36;
+
+      const cOutline = getCssToken('--outline');
+      const cGrid = getCssToken('--outline-variant');
+      const cMuted = getCssToken('--on-surface-variant');
+      const cText = getCssToken('--on-surface');
+      const cSage = getCssToken('--tertiary');
+
+      // Contorno exterior de la esfera
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, Math.PI * 2);
+      ctx.strokeStyle = cOutline;
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+
+      // Ecuador y meridianos
+      const drawCircle3D = (fn, dashed) => {
+        ctx.beginPath();
+        ctx.setLineDash(dashed ? [4, 4] : []);
+        for (let k = 0; k <= 64; k++) {
+          const t = (k / 64) * Math.PI * 2;
+          const pt3 = fn(t);
+          const pt2 = project3D(pt3[0], pt3[1], pt3[2], cx, cy, R);
+          if (k === 0) ctx.moveTo(pt2.px, pt2.py);
+          else ctx.lineTo(pt2.px, pt2.py);
+        }
+        ctx.strokeStyle = cGrid;
+        ctx.lineWidth = 1.1;
+        ctx.stroke();
+        ctx.setLineDash([]);
+      };
+      drawCircle3D((t) => [Math.cos(t), Math.sin(t), 0], false);
+      drawCircle3D((t) => [Math.cos(t), 0, Math.sin(t)], true);
+      drawCircle3D((t) => [0, Math.cos(t), Math.sin(t)], true);
+
+      // Ejes X, Y, Z
+      const axes = [
+        { p: [1.15, 0, 0], lbl: '+X |+⟩' },
+        { p: [-1.15, 0, 0], lbl: '-X' },
+        { p: [0, 1.15, 0], lbl: '+Y |+i⟩' },
+        { p: [0, 0, 1.18], lbl: '|0⟩ (+Z)' },
+        { p: [0, 0, -1.18], lbl: '|1⟩ (-Z)' }
+      ];
+      const origin = project3D(0, 0, 0, cx, cy, R);
+      axes.forEach((ax) => {
+        const end = project3D(ax.p[0], ax.p[1], ax.p[2], cx, cy, R);
+        ctx.beginPath();
+        ctx.moveTo(origin.px, origin.py);
+        ctx.lineTo(end.px, end.py);
+        ctx.strokeStyle = cOutline;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.fillStyle = ax.lbl.includes('|0⟩') ? cSage : cMuted;
+        ctx.font = '11px "Geist Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(ax.lbl, end.px, end.py + 3);
+      });
+
+      // Vectores de estado
+      vectors.forEach((vec) => {
+        const tip = project3D(vec.x, vec.y, vec.z, cx, cy, R);
+        ctx.beginPath();
+        ctx.moveTo(origin.px, origin.py);
+        ctx.lineTo(tip.px, tip.py);
+        ctx.strokeStyle = vec.color;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(tip.px, tip.py, 6, 0, Math.PI * 2);
+        ctx.fillStyle = vec.color;
+        ctx.fill();
+        ctx.strokeStyle = cText;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.fillStyle = vec.color;
+        ctx.font = '600 12px "Geist Mono", monospace';
+        ctx.fillText(vec.label, tip.px + 14, tip.py - 8);
+      });
+    }
+
+    function initBlochDrag() {
+      const c = document.getElementById('bloch-canvas');
+      if (!c) return;
+      c.addEventListener('pointerdown', (e) => {
+        blochDragging = true;
+        blochLastPtr = { x: e.clientX, y: e.clientY };
+      });
+      window.addEventListener('pointermove', (e) => {
+        if (!blochDragging) return;
+        const dx = e.clientX - blochLastPtr.x;
+        const dy = e.clientY - blochLastPtr.y;
+        blochLastPtr = { x: e.clientX, y: e.clientY };
+        blochYaw += dx * 0.01;
+        blochPitch = Math.max(-1.2, Math.min(1.2, blochPitch + dy * 0.01));
+        drawBlochSphere('bloch-canvas', [getCurrentBlochVec()]);
+      });
+      window.addEventListener('pointerup', () => { blochDragging = false; });
+    }
+
+    // Escena 9: Retos de compuertas cuánticas
+    const GATE_CHALLENGES = [
+      {
+        gateName: 'Pauli-Y',
+        matrix: [[{ re: 0, im: 0 }, { re: 0, im: -1 }], [{ re: 0, im: 1 }, { re: 0, im: 0 }]],
+        psi: [{ re: 0.6, im: 0 }, { re: 0, im: 0.8 }],
+        eq: `T = Y · |ψ⟩ = [[0, -i], [i, 0]] · [0.6, 0.8i]ᵀ`
+      },
+      {
+        gateName: 'Pauli-Y',
+        matrix: [[{ re: 0, im: 0 }, { re: 0, im: -1 }], [{ re: 0, im: 1 }, { re: 0, im: 0 }]],
+        psi: [{ re: 1, im: 0 }, { re: 0, im: 0 }],
+        eq: `T = Y · |0⟩ = [[0, -i], [i, 0]] · [1, 0]ᵀ`
+      },
+      {
+        gateName: 'Hadamard (H)',
+        matrix: [[{ re: Math.SQRT1_2, im: 0 }, { re: Math.SQRT1_2, im: 0 }], [{ re: Math.SQRT1_2, im: 0 }, { re: -Math.SQRT1_2, im: 0 }]],
+        psi: [{ re: 0, im: 0 }, { re: 1, im: 0 }],
+        eq: `T = H · |1⟩ = (1/√2)·[[1, 1], [1, -1]] · [0, 1]ᵀ  (usa 0.707 o 1/sqrt(2))`
+      },
+      {
+        gateName: 'Pauli-Z',
+        matrix: [[{ re: 1, im: 0 }, { re: 0, im: 0 }], [{ re: 0, im: 0 }, { re: -1, im: 0 }]],
+        psi: [{ re: Math.SQRT1_2, im: 0 }, { re: 0, im: Math.SQRT1_2 }],
+        eq: `T = Z · |+i⟩ = [[1, 0], [0, -1]] · [0.707, 0.707i]ᵀ`
+      }
+    ];
+
+    function stateToBloch(alpha, beta) {
+      const conjA = { re: alpha.re, im: -alpha.im };
+      const prod = cMul(conjA, beta);
+      return {
+        x: 2 * prod.re,
+        y: 2 * prod.im,
+        z: (alpha.re * alpha.re + alpha.im * alpha.im) - (beta.re * beta.re + beta.im * beta.im)
+      };
+    }
+
+    function applyGate(mat, psi) {
+      return [
+        cAdd(cMul(mat[0][0], psi[0]), cMul(mat[0][1], psi[1])),
+        cAdd(cMul(mat[1][0], psi[0]), cMul(mat[1][1], psi[1]))
+      ];
+    }
+
+    function loadGateChallenge() {
+      const idx = parseInt((document.getElementById('gate-challenge-select') || {}).value || '0', 10);
+      const ch = GATE_CHALLENGES[idx];
+      const box = document.getElementById('gate-equation-box');
+      if (box) box.textContent = ch.eq;
+      const inA = document.getElementById('gate-ans-alpha');
+      const inB = document.getElementById('gate-ans-beta');
+      if (inA) inA.value = '';
+      if (inB) inB.value = '';
+      const fb = document.getElementById('gate-feedback');
+      if (fb) fb.className = 'feedback-box';
+
+      const ini = stateToBloch(ch.psi[0], ch.psi[1]);
+      drawBlochSphere('gate-bloch-canvas', [
+        { x: ini.x, y: ini.y, z: ini.z, color: getCssToken('--data-3'), label: '|ψ⟩' }
+      ]);
+    }
+
+    function verifyGateChallenge() {
+      const idx = parseInt((document.getElementById('gate-challenge-select') || {}).value || '0', 10);
+      const ch = GATE_CHALLENGES[idx];
+      const expected = applyGate(ch.matrix, ch.psi);
+      const uA = parseComplex((document.getElementById('gate-ans-alpha') || {}).value);
+      const uB = parseComplex((document.getElementById('gate-ans-beta') || {}).value);
+
+      if (!uA || !uB) {
+        showFeedback('gate-feedback', 'err', 'Ingresa las componentes complejas α\' y β\' (ej: 0.8, 0.6i, -0.707).');
+        return;
+      }
+
+      const ini = stateToBloch(ch.psi[0], ch.psi[1]);
+      const fin = stateToBloch(expected[0], expected[1]);
+
+      if (cEq(uA, expected[0], 0.03) && cEq(uB, expected[1], 0.03)) {
+        ovaState.gateSolved += 1;
+        playTone('ok');
+        const chip = document.getElementById('gate-count-chip');
+        if (chip) chip.textContent = `Retos verificados: ${ovaState.gateSolved} / 2`;
+        drawBlochSphere('gate-bloch-canvas', [
+          { x: ini.x, y: ini.y, z: ini.z, color: getCssToken('--data-3'), label: '|ψ⟩' },
+          { x: fin.x, y: fin.y, z: fin.z, color: getCssToken('--tertiary'), label: 'U|ψ⟩' }
+        ]);
+        showFeedback('gate-feedback', 'ok', `¡Transformación exacta! $U|\\psi\\rangle = (${cFmt(expected[0], 3)})|0\\rangle + (${cFmt(expected[1], 3)})|1\\rangle$. Observa el desplazamiento del vector en la Esfera de Bloch.`);
+        persistState();
+      } else {
+        playTone('err');
+        const r0 = `(${cFmt(ch.matrix[0][0], 2)})(${cFmt(ch.psi[0], 2)}) + (${cFmt(ch.matrix[0][1], 2)})(${cFmt(ch.psi[1], 2)}) = ${cFmt(expected[0], 3)}`;
+        const r1 = `(${cFmt(ch.matrix[1][0], 2)})(${cFmt(ch.psi[0], 2)}) + (${cFmt(ch.matrix[1][1], 2)})(${cFmt(ch.psi[1], 2)}) = ${cFmt(expected[1], 3)}`;
+        showFeedback('gate-feedback', 'err', `No coincide con el producto matriz–vector. Verifica los signos con $i^2 = -1$:<br>α' = ${r0}<br>β' = ${r1}`);
+      }
+    }
+
+    /* ======================================================================
+       MÓDULO 5: RETO INTEGRADOR FINAL, RADAR, INSIGNIA Y ENCUESTA DUA
+       ====================================================================== */
+    const FINAL_QUIZ = [
+      {
+        rap: 'RAP 1',
+        q: `¿Cuál es la forma polar $z = r e^{i\\theta}$ del número complejo $z = -\\sqrt{3} + i$?`,
+        opts: [`$2 e^{i 5\\pi/6}$ ($r=2, \\theta=150^\\circ$)`, `$2 e^{i \\pi/6}$ ($r=2, \\theta=30^\\circ$)`, `$\\sqrt{2} e^{i 2\\pi/3}$`],
+        correct: 0,
+        explain: `$r = \\sqrt{(-\\sqrt{3})^2 + 1^2} = 2$ y al estar en el II cuadrante ($a<0, b>0$), $\\theta = 180^\\circ - 30^\\circ = 150^\\circ = 5\\pi/6$.`
+      },
+      {
+        rap: 'RAP 2',
+        q: `Simplifica la expresión $\\dfrac{i^{42} + 3i}{1 - i}$ utilizando ciclicidad y el conjugado:`,
+        opts: [`$-2 + i$`, `$1 + 2i$`, `$2 - i$`],
+        correct: 0,
+        explain: `$i^{42} = i^2 = -1$. Luego $\\dfrac{-1 + 3i}{1 - i} \\cdot \\dfrac{1 + i}{1 + i} = \\dfrac{-1 - i + 3i + 3i^2}{2} = \\dfrac{-4 + 2i}{2} = -2 + i$.`
+      },
+      {
+        rap: 'RAP 3',
+        q: `Dadas $A = \\begin{pmatrix} i & 1 \\\\ 0 & 2i \\end{pmatrix}$ y $B = \\begin{pmatrix} 2 \\\\ -i \\end{pmatrix}$, ¿cuál es el producto $A \\cdot B$?`,
+        opts: [`$\\begin{pmatrix} i \\\\ 2 \\end{pmatrix}$`, `$\\begin{pmatrix} 3i \\\\ -2 \\end{pmatrix}$`, `$\\begin{pmatrix} -i \\\\ 2 \\end{pmatrix}$`],
+        correct: 0,
+        explain: `Fila 1: $i(2) + 1(-i) = i$. Fila 2: $0(2) + 2i(-i) = -2i^2 = +2$.`
+      },
+      {
+        rap: 'RAP 4',
+        q: `Calcula el determinante de la matriz compleja $M = \\begin{pmatrix} 1 + i & 2 \\\\ i & 1 - i \\end{pmatrix}$:`,
+        opts: [`$2 - 2i$`, `$2 + 2i$`, `$-2i$`],
+        correct: 0,
+        explain: `$\\det(M) = (1+i)(1-i) - 2(i) = (1 - i^2) - 2i = 2 - 2i$.`
+      },
+      {
+        rap: 'RAP 5',
+        q: `Si un cúbit está en estado $|1\\rangle = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$ y se aplica la compuerta Pauli-Y $= \\begin{pmatrix} 0 & -i \\\\ i & 0 \\end{pmatrix}$, ¿cuál es el estado final?`,
+        opts: [`$-i|0\\rangle$`, `$i|0\\rangle$`, `$-|1\\rangle$`],
+        correct: 0,
+        explain: `$Y|1\\rangle = \\begin{pmatrix} 0 & -i \\\\ i & 0 \\end{pmatrix}\\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix} = \\begin{pmatrix} -i \\\\ 0 \\end{pmatrix} = -i|0\\rangle$.`
+      }
+    ];
+
+    function renderFinalQuiz() {
+      const cont = document.getElementById('final-quiz-container');
+      if (!cont) return;
+      cont.innerHTML = FINAL_QUIZ.map((item, qIdx) => {
+        const chosen = ovaState.finalQuizAnswers[qIdx];
+        const graded = ovaState.finalQuizGraded;
+        return `
+          <div class="well" style="display: grid; gap: var(--space-sm);">
+            <span class="data-label">${item.rap} · Pregunta ${qIdx + 1} de 5</span>
+            <p style="font-weight: 600;">${item.q}</p>
+            <div class="option-list">
+              ${item.opts.map((opt, oIdx) => {
+                let cls = 'option-btn';
+                if (chosen === oIdx) cls += ' selected';
+                if (graded) {
+                  if (oIdx === item.correct) cls += ' correct';
+                  else if (chosen === oIdx) cls += ' wrong';
+                }
+                return `<button type="button" class="${cls}" onclick="pickFinalOpt(${qIdx}, ${oIdx})"><span>${opt}</span></button>`;
+              }).join('')}
+            </div>
+            ${graded ? `<div class="feedback-box visible ${chosen === item.correct ? 'ok' : 'err'}">${item.explain}</div>` : ''}
+          </div>
+        `;
+      }).join('');
+      renderMathIn(cont);
+    }
+
+    function pickFinalOpt(qIdx, oIdx) {
+      ovaState.finalQuizAnswers[qIdx] = oIdx;
+      ovaState.finalQuizGraded = false;
+      renderFinalQuiz();
+      persistState();
+    }
+
+    function gradeFinalQuiz() {
+      if (ovaState.finalQuizAnswers.some((v) => v === null)) {
+        showFeedback('final-quiz-feedback', 'err', 'Responde los 5 reactivos antes de calificar el reto integrador.');
+        return;
+      }
+      let score = 0;
+      FINAL_QUIZ.forEach((it, idx) => {
+        if (ovaState.finalQuizAnswers[idx] === it.correct) score += 1;
+      });
+      ovaState.finalQuizGraded = true;
+      ovaState.finalQuizScore = score;
+      renderFinalQuiz();
+      playTone(score >= 3 ? 'ok' : 'err');
+      showFeedback('final-quiz-feedback', score >= 3 ? 'ok' : 'info', `Calificación obtenida en el reto integrador: <strong>${score} / 5</strong> (${((score / 5) * 100).toFixed(0)}%). Revisa tu informe radial e insignia digital.`);
+      persistState();
+    }
+
+    function getRapCompetencies() {
+      const r1 = Math.min(1, ((ovaState.argandSolved >= 1 ? 0.5 : 0) + (ovaState.matchesDone / 4) * 0.3 + (ovaState.finalQuizGraded && ovaState.finalQuizAnswers[0] === FINAL_QUIZ[0].correct ? 0.2 : 0)));
+      const r2 = Math.min(1, ((Math.min(4, ovaState.algSolved) / 4) * 0.35 + (ovaState.speedDone ? 0.25 : 0) + (ovaState.divSolved >= 1 ? 0.2 : 0) + (ovaState.finalQuizGraded && ovaState.finalQuizAnswers[1] === FINAL_QUIZ[1].correct ? 0.2 : 0)));
+      const r3 = Math.min(1, ((ovaState.rmatSolved >= 1 ? 0.3 : 0) + (Math.min(2, ovaState.cmatSolved) / 2) * 0.45 + (ovaState.finalQuizGraded && ovaState.finalQuizAnswers[2] === FINAL_QUIZ[2].correct ? 0.25 : 0)));
+      const r4 = Math.min(1, ((ovaState.cmatSolved >= 1 ? 0.6 : 0) + (ovaState.finalQuizGraded && ovaState.finalQuizAnswers[3] === FINAL_QUIZ[3].correct ? 0.4 : 0)));
+      const r5 = Math.min(1, ((ovaState.blochExplored ? 0.3 : 0) + (Math.min(2, ovaState.gateSolved) / 2) * 0.4 + (ovaState.finalQuizGraded && ovaState.finalQuizAnswers[4] === FINAL_QUIZ[4].correct ? 0.3 : 0)));
+      return [r1, r2, r3, r4, r5];
+    }
+
+    function drawRadarAndBadge() {
+      const svg = document.getElementById('radar-svg');
+      const raps = getRapCompetencies();
+      if (svg) {
+        const cx = 170, cy = 145, R = 92;
+        const labels = ['RAP 1 · Campo ℂ', 'RAP 2 · Álgebra', 'RAP 3 · Matrices', 'RAP 4 · Det(A)', 'RAP 5 · Cúbits'];
+        const cGrid = getCssToken('--outline-variant');
+        const cOutline = getCssToken('--outline');
+        const cPrimary = getCssToken('--primary');
+        const cSage = getCssToken('--tertiary');
+        const cMuted = getCssToken('--on-surface-variant');
+        const cText = getCssToken('--on-surface');
+
+        let html = '';
+        [0.25, 0.5, 0.75, 1].forEach((lvl) => {
+          const pts = labels.map((_, k) => {
+            const ang = -Math.PI / 2 + (k * 2 * Math.PI) / 5;
+            return `${(cx + Math.cos(ang) * R * lvl).toFixed(1)},${(cy + Math.sin(ang) * R * lvl).toFixed(1)}`;
+          }).join(' ');
+          html += `<polygon points="${pts}" fill="none" stroke="${lvl === 1 ? cOutline : cGrid}" stroke-width="1"/>`;
+        });
+        labels.forEach((lbl, k) => {
+          const ang = -Math.PI / 2 + (k * 2 * Math.PI) / 5;
+          const x2 = cx + Math.cos(ang) * R;
+          const y2 = cy + Math.sin(ang) * R;
+          const lx = cx + Math.cos(ang) * (R + 22);
+          const ly = cy + Math.sin(ang) * (R + 18);
+          html += `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="${cGrid}" stroke-width="1"/>`;
+          html += `<text x="${lx}" y="${ly}" text-anchor="middle" fill="${cMuted}" font-family="Geist Mono, monospace" font-size="10">${lbl}</text>`;
+        });
+
+        const dataPts = raps.map((v, k) => {
+          const ang = -Math.PI / 2 + (k * 2 * Math.PI) / 5;
+          const rad = Math.max(0.08, v) * R;
+          return `${(cx + Math.cos(ang) * rad).toFixed(1)},${(cy + Math.sin(ang) * rad).toFixed(1)}`;
+        }).join(' ');
+        html += `<polygon points="${dataPts}" fill="${cPrimary}" fill-opacity="0.22" stroke="${cPrimary}" stroke-width="2"/>`;
+        raps.forEach((v, k) => {
+          const ang = -Math.PI / 2 + (k * 2 * Math.PI) / 5;
+          const rad = Math.max(0.08, v) * R;
+          html += `<circle cx="${cx + Math.cos(ang) * rad}" cy="${cy + Math.sin(ang) * rad}" r="4.5" fill="${cSage}" stroke="${cText}" stroke-width="1"/>`;
+        });
+        svg.innerHTML = html;
+      }
+
+      // Nota ponderada 40% formativa + 60% sumativa
+      const formAvg = raps.reduce((s, x) => s + x, 0) / 5;
+      const sumScore = ovaState.finalQuizGraded ? (ovaState.finalQuizScore / 5) : 0;
+      const grade5 = 1 + 4 * (0.4 * formAvg + 0.6 * sumScore);
+      const rubText = document.getElementById('rubric-level-text');
+      if (rubText) {
+        if (!ovaState.finalQuizGraded) {
+          rubText.textContent = `Avance formativo actual: ${(formAvg * 100).toFixed(0)}%. Completa y califica el reto final para emitir la nota ponderada.`;
+        } else {
+          let nivel = 'Nivel Bajo (1.0 – 2.9)';
+          if (grade5 >= 4.6) nivel = 'Nivel Superior (4.6 – 5.0)';
+          else if (grade5 >= 4.0) nivel = 'Nivel Alto (4.0 – 4.5)';
+          else if (grade5 >= 3.0) nivel = 'Nivel Básico (3.0 – 3.9)';
+          rubText.textContent = `Nota estimada: ${grade5.toFixed(2)} / 5.00 · ${nivel}`;
+        }
+      }
+
+      // Insignia digital
+      const unlocked = ovaState.finalQuizGraded && ovaState.finalQuizScore >= 3;
+      const bSvg = document.getElementById('badge-svg');
+      const bTxt = document.getElementById('badge-status-text');
+      if (bSvg) {
+        const cFill = unlocked ? getCssToken('--primary') : getCssToken('--outline');
+        const cSage = unlocked ? getCssToken('--tertiary') : getCssToken('--outline');
+        const cText = unlocked ? getCssToken('--on-surface') : getCssToken('--on-surface-variant');
+        bSvg.innerHTML = `
+          <polygon points="130,10 230,45 205,130 55,130 30,45" fill="none" stroke="${cFill}" stroke-width="2.5"/>
+          <circle cx="130" cy="72" r="32" fill="${cFill}" fill-opacity="0.14" stroke="${cSage}" stroke-width="1.8"/>
+          <text x="130" y="76" text-anchor="middle" fill="${cText}" font-family="Geist Mono, monospace" font-size="16" font-weight="600">|ψ⟩ ∈ ℂ²</text>
+          <text x="130" y="144" text-anchor="middle" fill="${cSage}" font-family="Geist Mono, monospace" font-size="10">${unlocked ? 'INSIGNIA DESBLOQUEADA' : 'INSIGNIA BLOQUEADA'}</text>
+        `;
+      }
+      if (bTxt) {
+        bTxt.textContent = unlocked
+          ? `¡Felicitaciones! Acreditaste la Evocación Matemática Cuántica (${ovaState.finalQuizScore}/5 en el reto final).`
+          : 'Obtén al menos 3 de 5 aciertos en el reto final para desbloquear tu insignia.';
+      }
+    }
+
+    function saveDuaSurvey() {
+      ovaState.duaClarity = (document.getElementById('dua-clarity') || {}).value || '';
+      ovaState.duaTransfer = (document.getElementById('dua-transfer') || {}).value || '';
+      ovaState.duaComment = (document.getElementById('dua-comment') || {}).value || '';
+      if (ovaState.duaClarity || ovaState.duaTransfer) {
+        showFeedback('dua-survey-feedback', 'ok', '¡Gracias! Tu autoevaluación DUA quedó registrada en tu sesión.');
+      }
+      persistState();
+    }
+
+    function exportProgressReport() {
+      const raps = getRapCompetencies();
+      const lines = [
+        'INFORME DE DESEMPEÑO - OVA NÚMEROS COMPLEJOS Y COMPUTACIÓN CUÁNTICA',
+        '==================================================================',
+        `Confianza inicial declarada: ${ovaState.confidence || 'No registrada'} / 5`,
+        `Diagnóstico completado: ${ovaState.diagDone.filter(Boolean).length} / 3`,
+        `Plano de Argand retos superados: ${ovaState.argandSolved} | Emparejamientos: ${ovaState.matchesDone} / 4`,
+        `Álgebra en C (ejercicios): ${ovaState.algSolved} | Mejor puntaje potencias de i: ${ovaState.speedBest} / 5`,
+        `División pasos enlazados: ${ovaState.divOrderDone ? 'Sí' : 'Pendiente'} | Divisiones resueltas: ${ovaState.divSolved}`,
+        `Matrices reales verificadas: ${ovaState.rmatSolved} | Matrices complejas verificadas: ${ovaState.cmatSolved}`,
+        `Compuertas cuánticas verificadas: ${ovaState.gateSolved}`,
+        `Reto integrador final: ${ovaState.finalQuizGraded ? ovaState.finalQuizScore + ' / 5' : 'Pendiente'}`,
+        '',
+        'DESEMPEÑO POR RAP:',
+        `  RAP 1: ${(raps[0] * 100).toFixed(0)}%`,
+        `  RAP 2: ${(raps[1] * 100).toFixed(0)}%`,
+        `  RAP 3: ${(raps[2] * 100).toFixed(0)}%`,
+        `  RAP 4: ${(raps[3] * 100).toFixed(0)}%`,
+        `  RAP 5: ${(raps[4] * 100).toFixed(0)}%`,
+        '',
+        `Autoevaluación DUA - Claridad: ${ovaState.duaClarity || 'N/A'} | Transferencia: ${ovaState.duaTransfer || 'N/A'}`,
+        `Comentario: ${ovaState.duaComment || 'Sin comentarios'}`
+      ];
+      const content = lines.join('\n');
+      if (window.notebookAppApi && typeof window.notebookAppApi.triggerFileDownload === 'function') {
+        window.notebookAppApi.triggerFileDownload({
+          content: content,
+          contentType: 'text/plain',
+          encoding: 'UTF-8',
+          filename: 'informe_ova_complejos_cuantica.txt'
+        });
+      }
+    }
+
+    /* ======================================================================
+       ACTUALIZACIÓN DE PROGRESO GLOBAL Y RESTAURACIÓN DE ESTADO
+       ====================================================================== */
+    function updateProgressUI() {
+      const m1Done = ovaState.argandSolved >= 1 && ovaState.matchesDone >= 2;
+      const m2Done = ovaState.algSolved >= 2 && (ovaState.speedDone || ovaState.divSolved >= 1);
+      const m3Done = ovaState.rmatSolved >= 1 || ovaState.cmatSolved >= 1;
+      const m4Done = ovaState.blochExplored && ovaState.gateSolved >= 1;
+      const m5Done = ovaState.finalQuizGraded;
+
+      const flags = [m1Done, m2Done, m3Done, m4Done, m5Done];
+      const count = flags.filter(Boolean).length;
+
+      flags.forEach((done, idx) => {
+        const n = idx + 1;
+        const nav = document.getElementById('nav-m' + n);
+        const badge = document.getElementById('badge-m' + n);
+        if (nav) nav.classList.toggle('done', done);
+        if (badge) badge.style.display = done ? 'inline-flex' : 'none';
+      });
+
+      const pct = Math.round((count / 5) * 100);
+      const fill = document.getElementById('overall-progress-fill');
+      const wrap = document.getElementById('overall-progress-bar-wrap');
+      const lbl = document.getElementById('overall-progress-label');
+      if (fill) fill.style.width = pct + '%';
+      if (wrap) wrap.setAttribute('aria-valuenow', String(pct));
+      if (lbl) lbl.textContent = `Progreso: ${count} / 5 módulos completados`;
+
+      const fChip = document.getElementById('final-quiz-status');
+      if (fChip) fChip.textContent = ovaState.finalQuizGraded ? `Calificado: ${ovaState.finalQuizScore}/5` : 'Sin calificar';
+
+      drawRadarAndBadge();
+    }
+
+    function restoreUIFromState() {
+      document.documentElement.classList.toggle('dua-large', Boolean(ovaState.duaLarge));
+      const bFont = document.getElementById('btn-dua-font');
+      if (bFont) bFont.classList.toggle('btn-active', Boolean(ovaState.duaLarge));
+      const lblSound = document.getElementById('label-sound');
+      if (lblSound) lblSound.textContent = ovaState.soundEnabled ? 'Sonido guía: Activo' : 'Sonido guía: Silenciado';
+
+      if (ovaState.confidence) {
+        for (let i = 1; i <= 5; i++) {
+          const b = document.getElementById('conf-' + i);
+          if (b) b.classList.toggle('active', i === ovaState.confidence);
+        }
+        const st = document.getElementById('conf-status');
+        if (st) st.textContent = `Nivel de confianza inicial registrado: ${ovaState.confidence} / 5.`;
+      }
+      const algChip = document.getElementById('alg-count-chip');
+      if (algChip) algChip.textContent = `Resueltos: ${ovaState.algSolved} / 4`;
+      const divChip = document.getElementById('div-count-chip');
+      if (divChip) divChip.textContent = `Divisiones resueltas: ${ovaState.divSolved} / 2`;
+      const cmatChip = document.getElementById('cmat-done-chip');
+      if (cmatChip) cmatChip.textContent = `Verificadas: ${ovaState.cmatSolved} / 2`;
+      const gateChip = document.getElementById('gate-count-chip');
+      if (gateChip) gateChip.textContent = `Retos verificados: ${ovaState.gateSolved} / 2`;
+
+      const dCl = document.getElementById('dua-clarity');
+      const dTr = document.getElementById('dua-transfer');
+      const dCo = document.getElementById('dua-comment');
+      if (dCl) dCl.value = ovaState.duaClarity || '';
+      if (dTr) dTr.value = ovaState.duaTransfer || '';
+      if (dCo) dCo.value = ovaState.duaComment || '';
+
+      renderFinalQuiz();
+      updateProgressUI();
+    }
+
+    /* ======================================================================
+       INICIALIZACIÓN PRINCIPAL
+       ====================================================================== */
+    async function initOva() {
+      try {
+        if (window.notebookAppApi && typeof window.notebookAppApi.getAppState === 'function') {
+          const saved = await window.notebookAppApi.getAppState();
+          if (saved && typeof saved === 'object') {
+            ovaState = Object.assign({}, DEFAULT_STATE, saved);
+          }
+        }
+      } catch (e) {
+        /* Uso sin estado previo */
+      }
+
+      drawBitQubitSvg();
+      initArgandInteractions();
+      renderMatching();
+      generateAlgProblem();
+      updateWheelFromExp(2607);
+      renderDivSteps();
+      loadDivProblem();
+      setupRealMatrixUI();
+      setupComplexMatrixUI();
+      initBlochDrag();
+      updateBlochReadout();
+      drawBlochSphere('bloch-canvas', [getCurrentBlochVec()]);
+      loadGateChallenge();
+      restoreUIFromState();
+
+      if (typeof window.lucide !== 'undefined' && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+      }
+      renderMathIn(document.body);
+
+      try {
+        if (window.notebookAppApi && typeof window.notebookAppApi.notifyAppReady === 'function') {
+          window.notebookAppApi.notifyAppReady();
+        }
+      } catch (e) {
+        /* Host notification fallback */
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', initOva);
+    window.addEventListener('resize', () => {
+      drawBlochSphere('bloch-canvas', [getCurrentBlochVec()]);
+      loadGateChallenge();
+    });
+  </script>
+</body>
+</html>
