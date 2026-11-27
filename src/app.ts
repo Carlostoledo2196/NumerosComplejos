@@ -121,6 +121,7 @@ export function mountApp(root: HTMLElement, account?: AccountInfo): void {
     main,
     h('footer', { class: 'app-footer' },
       h('p', {}, `Objeto Virtual de Aprendizaje · ${COURSE.subject} · Enfoque DUA y constructivismo mediado por tecnología.`),
+      account ? h('p', {}, h('a', { href: './docente.html' }, 'Panel docente')) : null,
     ),
   );
   renderMath(root.querySelector('.hero') as HTMLElement);

@@ -157,5 +157,9 @@ export function authScreen(on: AuthHandlers): HTMLElement {
       panels.login,
       panels.register,
     ),
+    h('aside', { class: 'auth-teacher', 'aria-label': 'Acceso docente' },
+      h('span', {}, '¿Eres docente?'),
+      h('a', { class: 'btn', href: './docente.html' }, 'Ir al panel docente →'),
+    ),
   );
 }
