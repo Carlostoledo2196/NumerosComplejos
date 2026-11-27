@@ -66,6 +66,25 @@ Estos valores **no son secretos**: Firebase los diseña para ir en el navegador.
 
 Después: **Deploys → Trigger deploy → Deploy site** (las variables se aplican en el siguiente build).
 
+### Cómo verificar que Netlify tomó las variables
+
+En Netlify → **Deploys** → abre el último despliegue → **Deploy log**, busca el bloque **«Variables de Firebase para la OVA»**:
+
+```
+── Variables de Firebase para la OVA ──
+  VITE_FIREBASE_API_KEY              ✓ definida (39 caracteres)
+  VITE_FIREBASE_AUTH_DOMAIN          ✓ numeroscomplejos.firebaseapp.com
+  VITE_FIREBASE_PROJECT_ID           ✓ numeroscomplejos
+  VITE_FIREBASE_APP_ID               ✓ definida (41 caracteres)
+  → Firebase configurado: registro de estudiantes y panel docente activos.
+```
+
+- Si dice **«✗ falta»** en todas → Netlify no pasó ninguna variable al build: revisa que estén en *este* sitio, con alcance **Builds**, y despliega de nuevo.
+- Si faltan **algunas** → el build se detiene a propósito (para no publicar la OVA sin registro por error) y te dice cuáles faltan.
+- Los avisos **⚠** señalan comillas, espacios o nombres sin el prefijo `VITE_`.
+
+Las claves nunca se imprimen completas; solo el ID del proyecto y el dominio, que no son sensibles. También puedes correrlo localmente: `npm run check-env`.
+
 ## 7. Autorizar el dominio de Netlify
 
 Firebase → **Authentication → Configuración → Dominios autorizados → Agregar dominio** → `tu-sitio.netlify.app` (y tu dominio propio, si lo tienes).
