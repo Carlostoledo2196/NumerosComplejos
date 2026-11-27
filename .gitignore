@@ -5,3 +5,8 @@ dist/
 .env
 .env.local
 *.log
+
+# Credenciales de cuenta de servicio de Firebase/Google: NUNCA en el repositorio
+*firebase-adminsdk*.json
+*service-account*.json
+serviceAccount*.json
