@@ -73,7 +73,7 @@ async function start(root: HTMLElement): Promise<void> {
   };
 
   const accountBar = (u: { email: string | null }) =>
-    h('div', { class: 'app-header__account' }, h('span', {}, h('strong', {}, u.email ?? ''), ' · docente'), button('Cerrar sesión', () => void cloud.logout(), 'btn btn--small'));
+    h('div', { class: 'app-header__account' }, h('span', {}, 'Sesión: ', h('strong', {}, u.email ?? '')), button('Cerrar sesión', () => void cloud.logout(), 'btn btn--small'));
 
   let stop: (() => void) | null = null;
   cloud.onUser(async (u) => {
@@ -81,6 +81,22 @@ async function start(root: HTMLElement): Promise<void> {
     stop = null;
     if (!u) {
       loginView();
+      return;
+    }
+    // Primero: ¿el correo está en la lista de docentes? (p. ej. la sesión abierta puede ser de un estudiante)
+    if (!(await cloud.isTeacher(u))) {
+      const safeEmail = (u.email ?? '').replace(/[<>&"]/g, '');
+      page(root, accountBar(u), card('Esta cuenta no es de docente',
+        h('p', { html: `Tienes abierta la sesión de <strong>${safeEmail}</strong>, que no está en la lista de docentes autorizados (puede ser una cuenta de estudiante).` }),
+        h('div', { class: 'btn-row' },
+          button('Cerrar sesión e ingresar como docente', () => void cloud.logout(), 'btn btn--primary'),
+          h('a', { class: 'btn', href: './' }, 'Volver a la OVA'),
+        ),
+        h('details', {},
+          h('summary', {}, '¿Eres docente y tu correo no está autorizado?'),
+          h('p', { html: 'Pide a quien administra el proyecto de Firebase que lo agregue: <em>Firestore → colección <code>docentes</code> → documento con ID = tu correo en minúsculas</em>.' }),
+        ),
+      ));
       return;
     }
     if (!u.emailVerified) {
@@ -103,12 +119,6 @@ async function start(root: HTMLElement): Promise<void> {
           }),
         ),
         fb.el,
-      ));
-      return;
-    }
-    if (!(await cloud.isTeacher(u))) {
-      page(root, accountBar(u), card('Correo no autorizado',
-        h('p', { html: `La cuenta <strong>${(u.email ?? '').replace(/[<>&"]/g, '')}</strong> no está en la lista de docentes. Pide a quien administra el proyecto de Firebase que la agregue: <em>Firestore → colección <code>docentes</code> → documento con ID = tu correo en minúsculas</em>.` }),
       ));
       return;
     }

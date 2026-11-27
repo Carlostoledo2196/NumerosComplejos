@@ -255,3 +255,4 @@ input[type="range"] { width: 100%; accent-color: var(--primary); min-height: 2re
 /* Acceso al panel docente desde la pantalla de ingreso */
 .auth-teacher { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; justify-content: center; padding: var(--space-4); border: 1px dashed var(--border-strong); border-radius: var(--radius); color: var(--text-muted); }
 .auth-teacher .btn { text-decoration: none; }
+.app-header__account a.btn { text-decoration: none; color: inherit; background: transparent; border-color: currentColor; }

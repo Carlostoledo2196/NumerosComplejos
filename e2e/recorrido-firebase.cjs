@@ -115,16 +115,23 @@ const owner = { Authorization: 'Bearer owner', 'Content-Type': 'application/json
   await t.screenshot({ path: process.argv[3] + '-panel.png', fullPage: true });
 
   console.log('Seguridad');
-  const x = await browser.newPage();
+  // sesión de estudiante abierta: el panel lo dice y ofrece cambiar de cuenta
+  await page.getByRole('link', { name: 'Panel docente' }).first().click();
+  await page.waitForSelector('text=Esta cuenta no es de docente', { timeout: 15000 });
+  assert(true, 'con sesión de estudiante, el panel indica que no es cuenta docente');
+  await page.getByRole('button', { name: 'Cerrar sesión e ingresar como docente' }).click();
+  await page.waitForSelector('text=Ingreso docente', { timeout: 15000 });
+  assert(true, '«Cerrar sesión e ingresar como docente» lleva al ingreso docente');
+  const x = await (await browser.newContext()).newPage();
   await x.goto(URL_ + '/docente.html', { waitUntil: 'networkidle' });
   await x.getByLabel('Correo').fill('intruso@gmail.com');
   await x.getByLabel('Contraseña').fill('intruso123');
   await x.getByRole('button', { name: 'Crear cuenta docente' }).click();
-  await x.waitForSelector('text=Verifica tu correo');
+  await x.waitForSelector('text=Esta cuenta no es de docente', { timeout: 15000 });
   await fetch(await oob('intruso@gmail.com'));
-  await x.getByRole('button', { name: 'Ya verifiqué' }).click();
-  await x.waitForSelector('text=Correo no autorizado', { timeout: 15000 });
-  assert(true, 'un correo verificado que no está en /docentes no ve resultados');
+  await x.reload({ waitUntil: 'load' });
+  await x.waitForSelector('text=Esta cuenta no es de docente', { timeout: 15000 });
+  assert(true, 'un correo (aun verificado) que no está en /docentes no ve resultados');
 
   await browser.close();
   if (errors.length) { console.log('ERRORES:\n' + errors.join('\n')); process.exit(1); }

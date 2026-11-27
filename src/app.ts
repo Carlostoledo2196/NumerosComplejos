@@ -47,6 +47,7 @@ function header(account?: AccountInfo): HTMLElement {
         h('span', {}, h('strong', {}, account.nombre), ` · ${account.detalle}`),
         account.syncEl,
         button('Cerrar sesión', account.onLogout, 'btn btn--small'),
+        h('a', { class: 'btn btn--small', href: './docente.html' }, 'Panel docente'),
       )
     : null;
   return brandHeader('OVA · Números Complejos y Computación Cuántica', `${COURSE.subject} · ${COURSE.audience}`, tools, accountBar);
