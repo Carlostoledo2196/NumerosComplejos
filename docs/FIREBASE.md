@@ -48,7 +48,11 @@ Luego el docente entra a `https://TU-SITIO/docente.html`, pulsa **Crear cuenta d
 
 **Configuración del proyecto (⚙) → General → Tus apps → `</>` (Web)** → apodo «OVA» → Registrar (no hace falta Firebase Hosting). Copia los valores de `firebaseConfig`.
 
-## 6. Variables de entorno en Netlify
+## 6. Configuración web (ya incluida)
+
+La configuración de la app web del proyecto `numeroscomplejos` ya está en [`.env.production`](../.env.production): **no hace falta crear variables en Netlify**. Si la app web cambia (otro proyecto o una app nueva), actualiza ese archivo, o define variables en Netlify (tienen prioridad).
+
+### Variables de entorno en Netlify (opcional)
 
 Netlify → tu sitio → **Site configuration → Environment variables → Add a variable**:
 
