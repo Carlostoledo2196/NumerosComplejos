@@ -251,3 +251,7 @@ input[type="range"] { width: 100%; accent-color: var(--primary); min-height: 2re
 .consent__check input { width: 1.25rem; height: 1.25rem; margin-top: 0.15rem; flex: none; accent-color: var(--primary); }
 .consent ul { margin: var(--space-2) 0 0; padding-left: 1.2rem; display: grid; gap: var(--space-1); }
 .feedback ul { margin: 0; padding-left: 1.2rem; }
+
+/* Acceso al panel docente desde la pantalla de ingreso */
+.auth-teacher { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; justify-content: center; padding: var(--space-4); border: 1px dashed var(--border-strong); border-radius: var(--radius); color: var(--text-muted); }
+.auth-teacher .btn { text-decoration: none; }
