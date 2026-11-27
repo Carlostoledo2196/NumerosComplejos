@@ -6,13 +6,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "node scripts/check-env.mjs && tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "test:rules": "npx -y firebase-tools@14 emulators:exec --only firestore --project demo-ova \"vitest run --config vitest.rules.config.ts\"",
-    "emuladores": "npx -y firebase-tools@14 emulators:start --only auth,firestore --project demo-ova"
+    "emuladores": "npx -y firebase-tools@14 emulators:start --only auth,firestore --project demo-ova",
+    "check-env": "node scripts/check-env.mjs"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^5.0.2",
